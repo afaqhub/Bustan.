@@ -123,8 +123,14 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 .hud-btn svg { width: 54%; height: 54%; }
 .hud-btn.pressed, .hud-btn:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--lilac-deep), 0 3px 8px rgba(31, 42, 90, .2); }
 .hud-btn:disabled { opacity: .35; pointer-events: none; }
-.hud-spacer { width: var(--tap); height: 1px; flex: none; }
-@media (max-width: 560px) { .hud-spacer { order: 2; } }
+@media (max-width: 560px) { .hud .pause-btn { order: 2; } }
+/* الإيقاف المؤقت: يتجمّد المسرح وتظهر طبقة بزر متابعة كبير */
+.is-paused .stage, .is-paused .stage * { animation-play-state: paused !important; }
+.pause-layer { position: absolute; inset: 0; z-index: 90; display: grid; place-items: center; background: rgba(31, 42, 90, .45); }
+.resume-btn { width: calc(var(--tap) * 1.9); height: calc(var(--tap) * 1.9);
+  background: radial-gradient(circle at 35% 26%, #FFF4B8 0%, var(--sun) 60%, #F5BC2A 100%); box-shadow: 0 10px 0 var(--sun-deep), 0 20px 30px rgba(0, 0, 0, .3); }
+.resume-btn svg { width: 46%; height: 46%; margin-inline-start: 6%; }
+.resume-btn.pressed, .resume-btn:active { transform: translateY(8px); box-shadow: 0 2px 0 var(--sun-deep), 0 6px 12px rgba(0, 0, 0, .3); }
 
 /* ───────── مصابيح الجلسة ───────── */
 .bulbs {
@@ -628,11 +634,13 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 .mr-cell { position: relative; z-index: 1; display: grid; place-items: center; padding: 9%; border: 0; background: transparent; border-radius: 50%; }
 .mr-cell.src { }
 .mr-cell.none { }
-.mr-cell.tgt { border: 4px dashed #8E5CF0; background: rgba(255, 255, 255, .55); margin: 6%; padding: 4%; }
-.mr-cell.tgt::before { content: ''; position: absolute; inset: 14%; border-radius: 50%; background: var(--ghost, transparent); opacity: .3; }
-.mr-cell.tgt.next { animation: gapPulse 1.1s ease-in-out infinite; border-color: var(--sun-deep); background: rgba(255, 211, 78, .35); }
-.mr-cell.tgt.done { border: 0; background: transparent; margin: 0; padding: 9%; }
-.mr-cell.tgt.done::before { display: none; }
+.mr-cell.tgt { padding: 9%; } /* الزر بحجم الخانة كاملاً (مساحة لمس كاملة)، والدائرة المتقطعة داخله */
+.mr-cell.tgt::after { content: ''; position: absolute; inset: 6%; border-radius: 50%; border: 4px dashed #8E5CF0; background: rgba(255, 255, 255, .55); z-index: -1; }
+.mr-cell.tgt::before { content: ''; position: absolute; inset: 20%; border-radius: 50%; background: var(--ghost, transparent); opacity: .3; }
+.mr-cell.tgt.next { animation: gapPulse 1.1s ease-in-out infinite; }
+.mr-cell.tgt.next::after { border-color: var(--sun-deep); background: rgba(255, 211, 78, .35); }
+.mr-cell.tgt.done::after, .mr-cell.tgt.done::before { display: none; }
+.mr-cell { isolation: isolate; }
 .mr-fill { display: block; width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 -6px 0 rgba(0, 0, 0, .14), inset 0 5px 0 rgba(255, 255, 255, .35); }
 .mr-shape { width: 100%; height: 100%; }
 .g-choice.swatch { padding: calc(var(--cs) * .16); }
@@ -667,6 +675,176 @@ textarea, input { -webkit-user-select: text; user-select: text; }
   .pt-light, .pt-item.lit, .pt-dancer, .mr-deco, .bf-wing, .pulse-hint, .pulse-hint::after { animation: none !important; }
 }
 
+/* ═════════ سلة الفواكه: بستان وشجرة ═════════ */
+.fr-stage { background: linear-gradient(180deg, #BFEAFF 0%, #DFF6E8 55%, #B8E9A8 100%); --deep: #0B8269; }
+.fr-ask { position: relative; z-index: 3; display: flex; align-items: center; gap: 12px; direction: rtl; flex: none; }
+.fr-bear { width: clamp(64px, 13vmin, 110px); }
+.fr-bear svg { width: 100%; height: auto; }
+.fr-card { min-width: clamp(76px, 15vmin, 124px); height: clamp(76px, 15vmin, 124px); padding: 0 12px; border-radius: 26px; background: #FAFCFF; display: grid; place-items: center;
+  box-shadow: 0 7px 0 #0B8269, 0 14px 18px rgba(11, 130, 105, .25); font-size: clamp(48px, 10vmin, 86px); font-weight: 800; color: var(--night); line-height: 1; }
+.fr-card span { padding-bottom: .1em; }
+.fr-card.q { padding: 10px; } .fr-card.q svg { width: 70%; height: auto; }
+.fr-main { padding: 6px 0; }
+.fr-tree { position: relative; width: min(100%, 720px); height: 100%; display: grid; place-items: center; }
+.fr-canopy { position: absolute; inset: 0 2% 12% 2%; border-radius: 46% 46% 40% 40% / 50% 50% 40% 40%; background: radial-gradient(circle at 40% 35%, #6FDB8F, #2DBE7E 60%, #1C8F5C); box-shadow: 0 8px 0 #157A4D; }
+.fr-trunk { position: absolute; left: 50%; bottom: 0; width: 13%; height: 16%; margin-left: -6.5%; background: #8A5A33; border-radius: 8px 8px 0 0; z-index: -1; }
+.fr-grid { position: relative; z-index: 1; display: grid; justify-content: center; align-content: center; gap: 0; direction: rtl; margin-bottom: 10%; }
+.fr-fruit { display: grid; place-items: center; padding: 8%; border-radius: 50%; position: relative; transition: opacity .3s, transform .3s; }
+.fr-fruit svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, .15)); }
+.fr-fruit.taken { opacity: 0; transform: scale(.4); pointer-events: none; }
+.fr-fruit.rest { opacity: .6; }
+.fr-fruit.counted::after { content: attr(data-n); position: absolute; top: -8%; inset-inline-start: -4%; min-width: 46%; aspect-ratio: 1; border-radius: 50%; background: var(--sun); color: var(--night);
+  display: grid; place-items: center; font-weight: 800; font-size: clamp(16px, 3.6vmin, 30px); line-height: 1; box-shadow: 0 3px 0 var(--sun-deep); }
+.fr-fly { position: absolute; z-index: 30; pointer-events: none; padding: 8%; } .fr-fly svg { width: 100%; height: 100%; }
+.fr-basket { position: relative; z-index: 3; flex: none; width: clamp(130px, 30vmin, 230px); margin-top: -4px; }
+.fr-basket-art svg { width: 100%; height: auto; position: relative; z-index: 2; }
+.fr-in { position: absolute; bottom: 40%; width: 26%; z-index: 1; } .fr-in svg { width: 100%; height: auto; }
+.fr-count { position: absolute; z-index: 4; top: -38%; left: 50%; width: 46%; aspect-ratio: 1; margin-left: -23%; border-radius: 50%; background: var(--sun); color: var(--night);
+  display: grid; place-items: center; font-size: clamp(28px, 7vmin, 56px); font-weight: 800; line-height: 1; box-shadow: 0 5px 0 var(--sun-deep); opacity: 0; transition: opacity .2s; padding-bottom: .08em; }
+.fr-count.on { opacity: 1; }
+.g-choice.num span { font-size: calc(var(--cs) * .56); }
+.end-basket { width: 110px; }
+@media (orientation: landscape) and (max-height: 600px) {
+  .fr-stage { display: grid; grid-template-columns: auto 1fr; grid-template-rows: 1fr auto; column-gap: 14px; }
+  .fr-ask { grid-column: 1; grid-row: 1; flex-direction: column; align-self: center; }
+  .fr-main { grid-column: 2; grid-row: 1 / span 2; }
+  .fr-basket { grid-column: 1; grid-row: 2; width: 120px; margin-top: 30px; }
+  .fr-tray { grid-column: 1; grid-row: 2; flex-direction: column; }
+  .fr-stage .fr-tray { flex-direction: row; grid-column: 2; grid-row: 2; }
+}
+
+/* ═════════ صيد الحروف: بركة وأسماك ═════════ */
+.lt-stage { background: linear-gradient(180deg, #CFF3FF 0%, #9FE0FF 22%, #5CC8FF 60%, #2E9BE0 100%); --deep: #2468D1; }
+.lt-top { position: relative; z-index: 3; flex: none; display: flex; align-items: center; gap: 12px; direction: rtl; }
+.lt-frog { width: clamp(64px, 13vmin, 110px); } .lt-frog svg { width: 100%; height: auto; }
+.lt-card { width: clamp(84px, 17vmin, 136px); height: clamp(84px, 17vmin, 136px); border-radius: 28px; background: #FAFCFF; display: grid; place-items: center;
+  box-shadow: 0 7px 0 #2468D1, 0 14px 18px rgba(36, 104, 209, .3); font-size: clamp(56px, 12vmin, 100px); font-weight: 800; color: var(--night); line-height: 1; }
+.lt-card span { padding-bottom: .12em; }
+.lt-pond { position: relative; flex: 1 1 0; min-height: 0; width: calc(100% + 24px + var(--safe-l) + var(--safe-r)); margin: 8px 0; overflow: hidden; direction: ltr; }
+.lt-bubble { position: absolute; bottom: -20px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .7); animation: bubbleUp 7s linear infinite; pointer-events: none; }
+@keyframes bubbleUp { from { transform: translateY(0); opacity: .9; } to { transform: translateY(-110vh); opacity: 0; } }
+.lt-fish { position: absolute; left: 0; animation-name: swim; animation-timing-function: linear; animation-iteration-count: infinite; will-change: transform; touch-action: none; cursor: pointer; }
+@keyframes swim { from { transform: translateX(var(--from)); } to { transform: translateX(var(--to)); } }
+.lt-inner { position: relative; width: 100%; height: 100%; animation: wiggle 1.4s ease-in-out infinite alternate; }
+@keyframes wiggle { from { transform: translateY(-4px) rotate(-3deg); } to { transform: translateY(4px) rotate(3deg); } }
+.lt-body svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.lt-letter { position: absolute; left: 31%; top: 22%; width: 46%; height: 62%; display: grid; place-items: center; font-weight: 800; color: var(--night); line-height: 1; padding-bottom: .1em; pointer-events: none; }
+.lt-fish.caught { visibility: hidden; pointer-events: none; }
+.lt-fish.pulse-hint { animation-name: swim; } /* يبقى السبح، والنبض على الداخل */
+.lt-fish.pulse-hint .lt-inner { animation: pulseHint 1s ease-in-out infinite; }
+.lt-fish.pulse-hint .lt-inner::after { content: ''; position: absolute; inset: 0 5% 0 0; border-radius: 50%; border: 6px solid var(--sun); animation: haloRing 1s ease-in-out infinite; pointer-events: none; }
+.lt-fish.pulse-hint::after { display: none; }
+.lt-splash { position: absolute; z-index: 25; width: 120px; height: 120px; border-radius: 50%; border: 6px solid rgba(255, 255, 255, .9); pointer-events: none; }
+.lt-fly { position: absolute; z-index: 30; pointer-events: none; }
+.lt-bucket { position: relative; z-index: 3; flex: none; display: flex; align-items: center; gap: 10px; direction: rtl; }
+.lt-bucket-art { width: clamp(70px, 14vmin, 110px); } .lt-bucket-art svg { width: 100%; height: auto; }
+.lt-slots { display: flex; gap: 8px; }
+.lt-slot { width: clamp(44px, 9vmin, 70px); opacity: .3; filter: grayscale(1); transition: opacity .3s, filter .3s; }
+.lt-slot svg { width: 100%; height: auto; } .lt-slot.on { opacity: 1; filter: none; }
+@media (orientation: landscape) and (max-height: 600px) {
+  .lt-stage { display: grid; grid-template-columns: auto 1fr; grid-template-rows: 1fr auto; column-gap: 10px; }
+  .lt-top { grid-column: 1; grid-row: 1; flex-direction: column; align-self: center; }
+  .lt-pond { grid-column: 2; grid-row: 1 / span 2; width: auto; margin: 0; border-radius: 26px; }
+  .lt-bucket { grid-column: 1; grid-row: 2; flex-direction: column; }
+  .lt-slots { flex-direction: row; } .lt-slot { width: 34px; }
+}
+@media (prefers-reduced-motion: reduce) { .lt-inner, .lt-bubble { animation: none !important; } }
+
+/* ═════════ الرئيسية: «وحدي» فيها خمس ألعاب ═════════ */
+@media (orientation: portrait) {
+  /* «وحدي» بعرض كامل في صفين (٣ + ٢)، و«معك» و«إبداع» جنباً إلى جنب تحتها */
+  .zones { flex-direction: row; flex-wrap: wrap; align-content: center; }
+  .zones .zone-solo { flex: 1 1 100%; }
+  .zones .zone-together, .zones .zone-create { flex: 1 1 0; min-width: 0; }
+  .zone-solo .tiles { flex-wrap: wrap; justify-content: center; row-gap: 10px; }
+  .zone-solo .tile { flex: 0 0 calc((100% - 20px) / 3); }
+  .zone-together .zone-name, .zone-create .zone-name { font-size: 24px; }
+  .zone-together .tile-name, .zone-create .tile-name { font-size: clamp(14px, 2vh, 22px); }
+}
+@media (orientation: landscape) {
+  .zones .zone-solo { flex: 5 1 0; }
+  .zones .zone-together, .zones .zone-create { flex: 2 1 0; }
+  .zones .tile-name { font-size: clamp(14px, 2.6vh, 22px); }
+}
+@media (orientation: portrait) and (max-width: 560px) {
+  /* على الجوال: هوامش أضيق حتى لا تنزل أيقونات «معك» و«إبداع» عن حدّ اللمس */
+  .zones { left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); column-gap: 10px; }
+  .zones .zone-together, .zones .zone-create { padding: 8px 8px 12px; }
+  .zone-together .tiles, .zone-create .tiles { gap: 6px; }
+  .zone-together .zone-badge, .zone-create .zone-badge { width: 42px; height: 38px; }
+}
+
+/* ═════════ ورشة الأشكال: ابنِ الصورة ═════════ */
+.ws-stage { background: linear-gradient(180deg, #FFF3C9 0%, #FFE0EC 100%); padding-top: var(--hud-h); }
+.ws-main { padding: 4px 0; }
+.ws-board { position: relative; border-radius: 30px; background-color: #FAFCFF; background-image: radial-gradient(circle, #DCE6F8 2px, transparent 2.5px); background-size: 24px 24px;
+  box-shadow: inset 0 0 0 5px #FFD34E, 0 8px 0 #E2A21B, 0 18px 24px rgba(226, 162, 27, .25); padding: 6%; }
+.ws-art { position: relative; width: 100%; height: 100%; }
+.ws-slot svg { position: absolute; overflow: visible; }
+.ws-board svg *, .ws-piece-art svg *, .ws-drag svg * { vector-effect: non-scaling-stroke; }
+.ws-fill { filter: drop-shadow(0 4px 0 rgba(31, 42, 90, .18)); transform-origin: center; transform-box: fill-box; }
+.ws-board.done { animation: gapPulse .8s ease-in-out 2; }
+.ws-bottom { position: relative; z-index: 3; flex: none; display: flex; align-items: center; justify-content: center; gap: 12px; padding-top: 12px; width: 100%; }
+.ws-tray { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: var(--tap); max-width: calc(100% - var(--tap) - 20px); }
+.ws-piece-btn { width: var(--tap); height: var(--tap); border-radius: 22px; display: grid; place-items: center; touch-action: none;
+  background: radial-gradient(circle at 35% 25%, #fff 0%, #F4F8FF 60%, #E3ECFC 100%); box-shadow: 0 6px 0 #E2A21B, 0 10px 14px rgba(31, 42, 90, .18); transition: transform .1s, opacity .2s; }
+.ws-piece-art { display: block; } .ws-piece-art svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ws-piece-btn.picked { box-shadow: 0 0 0 5px var(--sun), 0 6px 0 var(--sun-deep); transform: translateY(-6px); }
+.ws-piece-btn.lifted { opacity: .35; }
+.ws-drag { position: fixed; left: 0; top: 0; z-index: 500; pointer-events: none; filter: drop-shadow(0 10px 8px rgba(31, 42, 90, .3)); }
+.ws-drag svg { width: 100%; height: 100%; overflow: visible; }
+.ws-next { flex: none; --cs: var(--tap); --deep: #6B3CC9; color: var(--night); padding: calc(var(--tap) * .22); opacity: .35; pointer-events: none; transition: opacity .4s; }
+.ws-next.ready { opacity: 1; pointer-events: auto; animation: pulseHint 1.1s ease-in-out infinite; }
+@media (orientation: landscape) and (max-height: 600px) {
+  .ws-stage { flex-direction: row; gap: 10px; padding-top: 14px; padding-inline-start: calc(var(--tap) + 24px); }
+  .ws-main { align-self: stretch; }
+  .ws-bottom { width: auto; max-width: 46%; flex-direction: column; padding-top: 0; }
+  .ws-tray { max-width: 100%; }
+}
+
+/* ═════════ بطاقات الذاكرة ═════════ */
+.mm-stage { background: radial-gradient(120% 90% at 50% 0%, #6B5BD6 0%, #3A3F9E 55%, #24296E 100%); --deep: #151A4A; }
+.mm-star { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #FFF7C2; animation: twinkle 2.6s ease-in-out infinite; pointer-events: none; }
+.mm-grid { display: grid; gap: 10px; justify-content: center; direction: rtl; perspective: 900px; }
+.mm-card { position: relative; width: 100%; height: 100%; padding: 0; background: none; border-radius: 18px; }
+.mm-flip { position: relative; width: 100%; height: 100%; transition: transform .45s cubic-bezier(.34, 1.4, .64, 1); transform-style: preserve-3d; }
+.mm-card.up .mm-flip { transform: rotateY(180deg); }
+.mm-face { position: absolute; inset: 0; border-radius: 18px; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: grid; place-items: center; }
+.mm-back { background: linear-gradient(145deg, #F2658E, #8E5CF0); box-shadow: 0 6px 0 #151A4A, inset 0 0 0 5px rgba(255, 255, 255, .35); }
+.mm-back-art { width: 42%; opacity: .9; } .mm-back-art svg { width: 100%; height: auto; }
+.mm-front { transform: rotateY(180deg); background: #FAFCFF; padding: 12%; box-shadow: 0 6px 0 #151A4A; }
+.mm-front svg { width: 100%; height: 100%; overflow: visible; }
+.mm-card.matched .mm-front { box-shadow: 0 0 0 5px var(--sun), 0 6px 0 var(--sun-deep), 0 0 24px rgba(255, 211, 78, .7); }
+.mm-card.matched { pointer-events: none; }
+.mm-card.pressed .mm-flip { transform: scale(.94); } .mm-card.up.pressed .mm-flip { transform: rotateY(180deg) scale(.94); }
+
+/* ═════════ الرئيسية: «وحدي» فيها ست ألعاب (صفّان من ثلاث) ═════════ */
+@media (orientation: landscape) {
+  .zones { display: grid; grid-template-columns: 3fr 2fr; grid-template-rows: auto auto; align-content: center; column-gap: 14px; row-gap: 12px; }
+  .zones .zone-solo { grid-column: 1; grid-row: 1 / span 2; }
+  .zones .zone-together { grid-column: 2; grid-row: 1; }
+  .zones .zone-create { grid-column: 2; grid-row: 2; }
+  .zone-solo .tiles { flex-wrap: wrap; justify-content: center; row-gap: 8px; }
+  .zone-solo .tile { flex: 0 0 calc((100% - 20px) / 3); }
+  .zones .tile { max-width: min(170px, 21vh); }
+  .zones .zone-head { margin-bottom: 4px; }
+  .zones .zone-name { font-size: clamp(20px, 4vh, 32px); }
+  .zones .zone-badge { width: clamp(40px, 7vh, 62px); height: clamp(34px, 6vh, 52px); }
+  .zones .tile-name { font-size: clamp(13px, 2.4vh, 22px); line-height: 1.15; }
+  .zones .zone { padding: 6px 10px 10px; }
+}
+@media (orientation: landscape) {
+  /* ثلاث في كل صف داخل «وحدي» */
+  .zone-solo .tiles { max-width: calc(3 * min(170px, 21vh) + 40px); margin: 0 auto; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  /* جوال أفقي: العمود الأيسر يبدأ من الأعلى (لا شعار فوقه)، و«وحدي» تبدأ تحت الشعار */
+  .zones { top: calc(8px + var(--safe-t)); bottom: calc(8px + var(--safe-b)); row-gap: 8px; }
+  .zones .zone-solo { margin-top: calc(var(--tap) + 4px); align-self: start; }
+  .zones .tile-name { font-size: 12px; white-space: nowrap; }
+  .zones .tile { gap: 4px; }
+}
+
 </style>
 </head>
 <body>
@@ -691,6 +869,9 @@ textarea, input { -webkit-user-select: text; user-select: text; }
       pattern: 'صانعة الأنماط',
       firstsound: 'أول صوت',
       bridge: 'جسر الروابط',
+      fruits: 'سلة الفواكه',
+      letters: 'صيد الحروف',
+      memory: 'بطاقات الذاكرة',
       workshop: 'ورشة الأشكال',
       coloring: 'لوحة التلوين'
     },
@@ -701,6 +882,8 @@ textarea, input { -webkit-user-select: text; user-select: text; }
       home: 'الرئيسية',
       stop: 'قف',
       replay: 'إعادة العرض',
+      pause: 'إيقاف مؤقت',
+      resume: 'متابعة',
       close: 'إغلاق'
     },
 
@@ -756,7 +939,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 
   var KEY = 'bustan.progress';
   var SCHEMA = 2;
-  var GAME_IDS = ['train', 'mirror', 'pattern', 'firstsound', 'bridge'];
+  var GAME_IDS = ['train', 'mirror', 'pattern', 'fruits', 'letters', 'memory', 'firstsound', 'bridge'];
   var MAX_DAYS = 60;
 
   var data = null;
@@ -1120,6 +1303,8 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     flutter: function (c, t) { for (var i = 0; i < 6; i++) noise(c, t + i * 0.09, 0.06, 0.03, 3000 + i * 300, 1500, 1.5); },
     // إضاءة فانوس (نغمة حسب الترتيب)
     lantern: function (c, t, i) { tone(c, SCALE[(i || 0) % SCALE.length], t, 0.25, 0.05, 'sine'); },
+    // رشّة ماء (صيد سمكة)
+    splash: function (c, t) { noise(c, t, 0.35, 0.06, 1800, 500, 0.8); tone(c, 900, t + 0.05, 0.12, 0.03, 'sine', 1400); },
     // كنس اللوحة
     sweep: function (c, t) { noise(c, t, 0.5, 0.05, 3000, 600, 0.6); },
     // مصباح يُضاء: النغمة ترتفع مع كل مصباح
@@ -1453,6 +1638,13 @@ textarea, input { -webkit-user-select: text; user-select: text; }
       '<rect x="20" y="28" width="8" height="12" rx="3" fill="currentColor"/>', 'icon-svg');
   }
 
+  function pauseIcon() {
+    return svg('0 0 48 48', '<rect x="13" y="10" width="8" height="28" rx="3" fill="currentColor"/><rect x="27" y="10" width="8" height="28" rx="3" fill="currentColor"/>', 'icon-svg');
+  }
+  function playIcon() {
+    return svg('0 0 48 48', '<path d="M16 10L38 24L16 38Z" fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>', 'icon-svg');
+  }
+
   function replayIcon() {
     // يد صغيرة مع سهم تشغيل
     return svg('0 0 48 48',
@@ -1623,6 +1815,28 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     }
   };
 
+  GAME_ICONS.fruits = function () {
+    return '<circle cx="34" cy="30" r="15" fill="#F0485A"/><circle cx="60" cy="24" r="15" fill="#F0485A"/><circle cx="48" cy="44" r="15" fill="#FF8A3D"/>' +
+      '<path d="M34 16q2-8 8-10M60 10q2-6 8-8" stroke="#6B4E2E" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<ellipse cx="28" cy="25" rx="4" ry="6" fill="#fff" opacity=".4"/>' +
+      '<path d="M10 52H90L80 90Q79 94 74 94H26Q21 94 20 90Z" fill="#DDA86C" stroke="#8A5A33" stroke-width="4" stroke-linejoin="round"/>' +
+      '<path d="M16 66H84M20 80H80M38 52L40 94M62 52L60 94" stroke="#B67B4D" stroke-width="3"/>' +
+      '<rect x="6" y="46" width="88" height="10" rx="5" fill="#C9925A" stroke="#8A5A33" stroke-width="3"/>';
+  };
+  GAME_ICONS.letters = function () {
+    return '<path d="M0 72Q50 60 100 72V100H0Z" fill="#6FD1F4"/>' +
+      '<path d="M84 46L100 26V66Z" fill="#FF8A3D" stroke="#FF8A3D" stroke-width="5" stroke-linejoin="round"/>' +
+      '<ellipse cx="50" cy="46" rx="40" ry="28" fill="#FF8A3D"/><ellipse cx="54" cy="48" rx="24" ry="21" fill="#FAFCFF"/>' +
+      '<circle cx="20" cy="40" r="5" fill="#fff"/><circle cx="19" cy="40" r="3" fill="#2B2340"/>' +
+      '<text x="54" y="60" text-anchor="middle" font-family="Tajawal, sans-serif" font-weight="800" font-size="34" fill="#1F2A5A">ب</text>' +
+      '<circle cx="14" cy="16" r="5" fill="none" stroke="#5CC8FF" stroke-width="2.5"/><circle cx="26" cy="8" r="3" fill="none" stroke="#5CC8FF" stroke-width="2"/>';
+  };
+  GAME_ICONS.memory = function () {
+    return '<rect x="8" y="14" width="38" height="50" rx="8" fill="#8E5CF0" transform="rotate(-10 27 39)"/>' +
+      '<path d="M27 30q2 8 9 9q-7 1-9 9q-2-8-9-9q7-1 9-9z" fill="#FFF7C2" transform="rotate(-10 27 39)"/>' +
+      '<rect x="44" y="30" width="44" height="58" rx="9" fill="#FAFCFF" stroke="#8E5CF0" stroke-width="4" transform="rotate(8 66 59)"/>' +
+      '<g transform="translate(48 38) scale(.38) rotate(8 50 50)">' + ANIMALS.cat(false) + '</g>';
+  };
   GAME_ICONS.workshop = function () {
     return '<rect x="10" y="50" width="38" height="38" rx="6" fill="#3D8BFD" fill-opacity=".8" stroke="#3D8BFD" stroke-width="4"/>' +
       '<polygon points="50,10 74,50 26,50" fill="#F2658E" fill-opacity=".8" stroke="#F2658E" stroke-width="4" stroke-linejoin="round"/>' +
@@ -1680,6 +1894,8 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     hand: hand,
     house: house,
     replayIcon: replayIcon,
+    pauseIcon: pauseIcon,
+    playIcon: playIcon,
     bulb: bulb,
     cloud: cloud,
     moon: moon,
@@ -2250,6 +2466,9 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     { id: 'train', zone: 'solo', rounds: 10 },
     { id: 'mirror', zone: 'solo', rounds: 10 },
     { id: 'pattern', zone: 'solo', rounds: 10 },
+    { id: 'fruits', zone: 'solo', rounds: 10 },
+    { id: 'letters', zone: 'solo', rounds: 10 },
+    { id: 'memory', zone: 'solo', rounds: 10 },
     { id: 'firstsound', zone: 'together', rounds: 8 },
     { id: 'bridge', zone: 'together', rounds: 8 },
     // القسم الإبداعي: لعب حرّ بلا جولات ولا مصابيح
@@ -2313,12 +2532,26 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     };
     ctx.homeBtn = UI.iconButton('home-btn', B.art.house(), S.buttons.home, function () { exit(ctx, game); });
     // شريط الأعلى: زر الرئيسية فقط والمصابيح (مساحة فارغة تعادل الزر لتبقى المصابيح في الوسط)
-    ctx.hud = h('div', { class: 'hud' }, ctx.homeBtn, bulbs.el, h('span', { class: 'hud-spacer' }));
+    // شريط الأعلى: الرئيسية (يمين) — المصابيح — إيقاف مؤقت (يسار)
+    ctx.pauseBtn = UI.iconButton('pause-btn', B.art.pauseIcon(), S.buttons.pause, function () { pause(ctx, game); });
+    ctx.hud = h('div', { class: 'hud' }, ctx.homeBtn, bulbs.el, ctx.pauseBtn);
     ctx.root = h('div', { class: 'screen game-screen game-' + it.id, 'data-game': it.id, 'data-zone': it.zone }, stage, ctx.hud);
 
     // انتظار وحركة آمنان: لا يكملان بعد الخروج من اللعبة
     function guard(v) { return ctx.alive ? v : new Promise(function () {}); }
-    ctx.sleep = function (ms) { return UI.sleep(ms).then(guard); };
+    /* انتظار يتجمّد مع الإيقاف المؤقت: يُحسب الوقت المتبقي ويُستأنف بعد المتابعة */
+    ctx.timers = [];
+    ctx.paused = false;
+    ctx.sleep = function (ms) {
+      return new Promise(function (res) {
+        var t = { rem: ms / UI.ts, id: 0, t0: 0, on: false };
+        t.start = function () { t.on = true; t.t0 = performance.now(); t.id = setTimeout(t.done, Math.max(0, t.rem)); };
+        t.stop = function () { if (!t.on) return; t.on = false; clearTimeout(t.id); t.rem -= performance.now() - t.t0; };
+        t.done = function () { ctx.timers = ctx.timers.filter(function (x) { return x !== t; }); if (ctx.alive) res(); };
+        ctx.timers.push(t);
+        if (!ctx.paused) t.start();
+      });
+    };
     ctx.anim = function (el, kf, o) { return UI.anim(el, kf, o).then(guard); };
     return ctx;
   }
@@ -2384,6 +2617,34 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     ctx.root.appendChild(end);
     UI.anim(end, [{ opacity: 0 }, { opacity: 1 }], { dur: 1000, fill: 'both' });
     if (art) UI.anim(art, [{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { dur: 900, delay: 300, easing: UI.SPRING });
+  }
+
+  /* الإيقاف المؤقت: يتجمّد كل شيء (الحركة والمؤقتات والقطار) وتظهر طبقة بزر متابعة كبير */
+  function pause(ctx, game) {
+    if (ctx.paused || !ctx.alive || ctx.ending) return;
+    ctx.paused = true;
+    ctx.timers.forEach(function (t) { t.stop(); });
+    ctx.frozen = ctx.stage.getAnimations({ subtree: true }).filter(function (a) { return a.playState === 'running'; });
+    ctx.frozen.forEach(function (a) { try { a.pause(); } catch (e) {} });
+    ctx.root.classList.add('is-paused');
+    if (game.pause) game.pause();
+    var resume = UI.iconButton('resume-btn', B.art.playIcon(), B.S.buttons.resume, function () { unpause(ctx, game); });
+    ctx.pauseLayer = h('div', { class: 'pause-layer' }, resume);
+    ctx.root.appendChild(ctx.pauseLayer);
+    UI.anim(ctx.pauseLayer, [{ opacity: 0 }, { opacity: 1 }], { dur: 250, fill: 'none' });
+    UI.anim(resume, [{ transform: 'scale(.4)' }, { transform: 'scale(1)' }], { dur: 380, easing: UI.SPRING, fill: 'none' });
+  }
+  function unpause(ctx, game) {
+    if (!ctx.paused) return;
+    var layer = ctx.pauseLayer;
+    ctx.pauseLayer = null;
+    UI.anim(layer, [{ opacity: 1 }, { opacity: 0 }], { dur: 220 }).then(function () { layer.remove(); });
+    ctx.paused = false;
+    ctx.root.classList.remove('is-paused');
+    (ctx.frozen || []).forEach(function (a) { try { if (a.playState === 'paused') a.play(); } catch (e) {} });
+    ctx.frozen = null;
+    if (game.resume) game.resume();
+    ctx.timers.slice().forEach(function (t) { t.start(); });
   }
 
   function exit(ctx, game) {
@@ -3121,7 +3382,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     if (!st || !st.alive) return;
     var dt = Math.min(0.05, (now - st.last) / 1000) * UI.ts;
     st.last = now;
-    step(dt);
+    if (!st.paused) step(dt); // الإيقاف المؤقت: لا حركة ولا عدّ ولا صوت
     st.raf = requestAnimationFrame(frame);
   }
 
@@ -3200,7 +3461,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 
   /* ══════════ النقر على «قف» ══════════ */
   function onTap() {
-    if (!st || st.phase !== 'play' || st.demo) return;
+    if (!st || st.paused || st.phase !== 'play' || st.demo) return;
     if (st.v < SPEED * 0.25) return; // يتوقف أو ينطلق ببطء: نتجاهل
     var g = st.G, best = null, bd = 9;
     st.active.poles.forEach(function (p) {
@@ -3491,6 +3752,9 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     playRound: function (ctx, level, index) {
       return runRound(level, index, false);
     },
+
+    pause: function () { if (st) st.paused = true; },
+    resume: function () { if (st) { st.paused = false; st.last = performance.now(); } },
 
     cancelRound: function () {
       if (!st || !st.resolve) return;
@@ -4361,30 +4625,726 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 
 </script>
 <script>
+/* لعبة «سلة الفواكه» — العدّ لغرض وقراءة الأرقام. عالم بستان وشجرة.
+   نمطان:
+   • «أعطِني»: الدب يحمل بطاقة رقم، فتقطف الطفلة من الشجرة فاكهة فاكهة وتسقط في السلة،
+     ويظهر فوق السلة العدد الجاري (١، ٢، ٣…) حتى تبلغ الرقم المطلوب.
+   • «كم؟»: في السلة فواكه مرتبة صفوفاً من خمس، فتختار رقمها من ثلاث بطاقات،
+     ثم تُعدّ الفواكه أمامها واحدة واحدة.
+   المستويات: ١) أعطني ١–٥  ٢) حتى ١٠ ويدخل «كم؟» حتى ٥  ٣) «كم؟» حتى ١٠
+              ٤) أعطني حتى ١٥  ٥) حتى ٢٠ في النمطين. */
+(function () {
+  'use strict';
+  var B = (window.Bustan = window.Bustan || {});
+  var UI = B.UI, h = UI.h, art = B.art, kit = B.kit;
+
+  var FRUITS = ['apple', 'strawberry', 'lemon', 'pomegranate', 'grapes', 'banana'];
+
+  function between(a, b) { return a + kit.rand(b - a + 1); }
+  function config(level, i) {
+    var odd = i % 2 === 1;
+    if (level === 1) return { mode: 'give', n: between(1, 5) };
+    if (level === 2) return odd ? { mode: 'count', n: between(1, 5) } : { mode: 'give', n: between(3, 10) };
+    if (level === 3) return odd ? { mode: 'count', n: between(3, 10) } : { mode: 'give', n: between(4, 10) };
+    if (level === 4) return odd ? { mode: 'count', n: between(5, 12) } : { mode: 'give', n: between(8, 15) };
+    return odd ? { mode: 'count', n: between(8, 20) } : { mode: 'give', n: between(10, 20) };
+  }
+
+  /* أبعاد شبكة الشجرة: أكبر حجم يتسع لـ total ثمرة، دون النزول عن حدّ اللمس */
+  function fitGrid(total, W, H, min) {
+    var best = null;
+    for (var c = 1; c <= total; c++) {
+      var r = Math.ceil(total / c), s = Math.min(W / c, H / r);
+      if (!best || s > best.s) best = { c: c, r: r, s: s };
+    }
+    if (best.s < min) { // نقلّل الثمار الزائدة ونحافظ على حجم اللمس
+      var c2 = Math.max(1, Math.floor(W / min)), r2 = Math.max(1, Math.floor(H / min));
+      best = { c: c2, r: r2, s: min, cap: c2 * r2 };
+    }
+    best.s = Math.min(best.s, UI.vp().tablet ? 130 : 104);
+    return best;
+  }
+
+  function basketSvg() {
+    return art.svg('0 0 120 80',
+      '<path d="M10 30H110L98 74Q96 78 90 78H30Q24 78 22 74Z" fill="#DDA86C" stroke="#8A5A33" stroke-width="4" stroke-linejoin="round"/>' +
+      '<path d="M16 44H104M20 58H100M40 30L44 78M60 30V78M80 30L76 78" stroke="#B67B4D" stroke-width="3"/>' +
+      '<rect x="4" y="22" width="112" height="12" rx="6" fill="#C9925A" stroke="#8A5A33" stroke-width="4"/>', 'basket-svg');
+  }
+
+  var st = null, runner = kit.roundRunner();
+
+  function build(ctx) {
+    var stage = ctx.stage;
+    stage.classList.add('g-stage', 'fr-stage');
+    st.card = h('div', { class: 'fr-card' });
+    st.ask = h('div', { class: 'fr-ask' }, h('div', { class: 'fr-bear', html: art.animal('bear') }), st.card);
+    st.tree = h('div', { class: 'fr-tree' }, h('div', { class: 'fr-canopy' }), h('div', { class: 'fr-trunk' }));
+    st.grid = h('div', { class: 'fr-grid' });
+    st.tree.appendChild(st.grid);
+    st.count = h('div', { class: 'fr-count' });
+    st.basket = h('div', { class: 'fr-basket' }, st.count, h('div', { class: 'fr-basket-art', html: basketSvg() }));
+    st.tray = h('div', { class: 'g-tray fr-tray' });
+    stage.appendChild(st.ask);
+    stage.appendChild(h('div', { class: 'g-main fr-main' }, st.tree));
+    stage.appendChild(st.basket);
+    stage.appendChild(st.tray);
+  }
+
+  function showCard(text, isQ) {
+    st.card.innerHTML = '';
+    st.card.classList.toggle('q', !!isQ);
+    if (isQ) st.card.innerHTML = art.bubbleQ();
+    else st.card.appendChild(h('span', { text: text }));
+    UI.anim(st.card, [{ transform: 'scale(.3) rotate(-10deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { dur: 480, easing: UI.SPRING, fill: 'backwards' });
+    if (B.audio) B.audio.play('card');
+  }
+
+  function bumpCount(n) {
+    st.count.textContent = UI.num(n);
+    st.count.classList.add('on');
+    UI.anim(st.count, [{ transform: 'scale(.5)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { dur: 340, easing: UI.SPRING, fill: 'none' });
+    if (B.audio) B.audio.play('lantern', n - 1);
+  }
+
+  async function celebrate(ctx) {
+    if (B.audio) B.audio.play('cheer');
+    var c = kit.center(st.basket, ctx.stage);
+    UI.burst(ctx.stage, c.x, c.y - 20, { n: 22, spread: 150, dur: 1400 });
+    UI.anim(st.ask.firstChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-22px) rotate(-6deg)' }, { transform: 'translateY(0)' }, { transform: 'translateY(-12px) rotate(6deg)' }, { transform: 'translateY(0)' }], { dur: 900, fill: 'none' });
+    await ctx.sleep(1400);
+  }
+
+  /* نمط «أعطِني» */
+  async function giveRound(ctx, n, demo, alive) {
+    var fruit = kit.pick(FRUITS), count = 0, done, finished = new Promise(function (r) { done = r; });
+    st.tree.style.display = ''; st.basket.style.display = ''; st.tray.innerHTML = ''; st.tray.style.display = 'none';
+    st.count.textContent = ''; st.count.classList.remove('on');
+    st.basket.querySelectorAll('.fr-in').forEach(function (x) { x.remove(); });
+    showCard(UI.num(n));
+    var vp = UI.vp(), want = Math.min(24, n + 2 + kit.rand(3));
+    var g = fitGrid(want, st.grid.clientWidth || st.tree.clientWidth * 0.86, st.tree.clientHeight * 0.8, vp.tap);
+    var total = Math.max(n, Math.min(want, g.cap || want));
+    st.grid.innerHTML = '';
+    st.grid.style.gridTemplateColumns = 'repeat(' + g.c + ',' + g.s + 'px)';
+    st.grid.style.gridAutoRows = g.s + 'px';
+    var btns = [];
+    for (var i = 0; i < total; i++) {
+      var b = h('button', { class: 'fr-fruit', type: 'button', html: B.pics.draw(fruit) });
+      (function (bb) { UI.bindPress(bb, function () { pickFruit(bb); }); })(b);
+      st.grid.appendChild(b);
+      UI.anim(b, [{ transform: 'scale(0)' }, { transform: 'scale(1)' }], { dur: 380, delay: 150 + i * 40, easing: UI.SPRING, fill: 'backwards' });
+      btns.push(b);
+    }
+    function pickFruit(b) {
+      if (count >= n || b.classList.contains('taken') || (demo && !b.__auto) || ctx.paused) return;
+      b.classList.add('taken');
+      b.disabled = true;
+      count++;
+      // الثمرة تطير إلى السلة
+      var from = kit.center(b, ctx.stage), to = kit.center(st.basket, ctx.stage);
+      var fly = h('div', { class: 'fr-fly', style: { left: from.x - from.w / 2 + 'px', top: from.y - from.h / 2 + 'px', width: from.w + 'px', height: from.h + 'px' }, html: B.pics.draw(fruit) });
+      ctx.stage.appendChild(fly);
+      var dx = to.x - from.x, dy = to.y - from.y + 10;
+      UI.anim(fly, [
+        { transform: 'translate(0,0) scale(1)' },
+        { transform: 'translate(' + dx * 0.5 + 'px,' + (Math.min(dy, 0) - 60) + 'px) scale(.9)', offset: 0.45 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(.55)' }
+      ], { dur: 520, easing: 'ease-in-out' }).then(function () {
+        fly.remove();
+        var inB = h('span', { class: 'fr-in', html: B.pics.draw(fruit), style: { left: 18 + Math.random() * 54 + '%' } });
+        st.basket.appendChild(inB);
+      });
+      bumpCount(count);
+      if (count === n) setTimeout(function () { done(true); }, 560 / UI.ts);
+    }
+    st.solve = function () { var b = btns.filter(function (x) { return !x.classList.contains('taken'); })[0]; if (b && count < n) { b.click(); return true; } return false; };
+    st.cancel = function () { done(false); };
+    if (demo) {
+      await ctx.sleep(900);
+      for (var k = 0; k < n && alive(); k++) {
+        var c = kit.center(btns[k], ctx.stage), hd = kit.hand(ctx.stage, c.x, c.y + c.h * 0.1);
+        await ctx.sleep(450); if (!alive()) return;
+        await hd.tap(); btns[k].__auto = true; pickFruit(btns[k]); hd.el.remove();
+        await ctx.sleep(250);
+      }
+    }
+    var ok = await finished;
+    st.solve = null;
+    if (!alive() || !ok) return;
+    btns.forEach(function (b) { if (!b.classList.contains('taken')) b.classList.add('rest'); });
+    await celebrate(ctx);
+    if (!alive()) return;
+    return { errors: 0 };
+  }
+
+  /* نمط «كم؟» */
+  async function countRound(ctx, n, demo, alive, setCur) {
+    var fruit = kit.pick(FRUITS);
+    st.tree.style.display = ''; st.basket.style.display = 'none'; st.tray.style.display = '';
+    showCard('', true);
+    // الفواكه في صفوف من خمس (مثل إطار العشرة) فيسهل العدّ
+    st.grid.innerHTML = '';
+    var cols = n > 5 ? 5 : n, rows = Math.ceil(n / 5);
+    var s = Math.min((st.tree.clientWidth * 0.86) / cols, (st.tree.clientHeight * 0.78) / rows, UI.vp().tablet ? 120 : 92);
+    st.grid.style.gridTemplateColumns = 'repeat(' + cols + ',' + s + 'px)';
+    st.grid.style.gridAutoRows = s + 'px';
+    var items = [];
+    for (var i = 0; i < n; i++) {
+      var it = h('span', { class: 'fr-fruit show', html: B.pics.draw(fruit) });
+      st.grid.appendChild(it); items.push(it);
+      UI.anim(it, [{ transform: 'scale(0)' }, { transform: 'scale(1)' }], { dur: 380, delay: 120 + i * 45, easing: UI.SPRING, fill: 'backwards' });
+    }
+    await ctx.sleep(500 + n * 45);
+    if (!alive()) return;
+    var maxN = Math.max(5, n + 2), opts = [n];
+    while (opts.length < 3) {
+      var d = n + (kit.rand(2) ? 1 : -1) * (1 + kit.rand(2));
+      if (d >= 1 && d <= Math.max(maxN, 20) && opts.indexOf(d) < 0) opts.push(d);
+    }
+    opts = kit.shuffle(opts);
+    st.tray.innerHTML = '';
+    var btns = opts.map(function (v, i) {
+      var b = h('button', { class: 'g-choice letter num', type: 'button' }, h('span', { text: UI.num(v) }));
+      st.tray.appendChild(b);
+      UI.anim(b, [{ opacity: 0, transform: 'translateY(30px)' }, { opacity: 1, transform: 'none' }], { dur: 380, delay: i * 90, easing: UI.SPRING, fill: 'backwards' });
+      return b;
+    });
+    st.answer = btns[opts.indexOf(n)];
+    var ch = kit.choice(ctx, ctx.stage, btns, opts.indexOf(n), { demo: demo });
+    setCur(ch);
+    var res = await ch.promise;
+    st.answer = null;
+    if (!alive() || res.cancelled) return;
+    showCard(UI.num(n));
+    // نعدّ الفواكه أمامها واحدة واحدة
+    for (var k = 0; k < items.length; k++) {
+      items[k].classList.add('counted');
+      items[k].setAttribute('data-n', UI.num(k + 1));
+      if (B.audio) B.audio.play('lantern', k);
+      UI.anim(items[k], [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }, { transform: 'scale(1)' }], { dur: 300, easing: UI.SPRING, fill: 'none' });
+      await ctx.sleep(Math.max(120, 260 - n * 6));
+      if (!alive()) return;
+    }
+    await celebrate(ctx);
+    if (!alive()) return;
+    return { errors: demo ? 0 : res.errors };
+  }
+
+  B.games.fruits = {
+    id: 'fruits',
+    mount: function (ctx) { st = { ctx: ctx }; build(ctx); },
+    demo: function (ctx) { return runner.run(function (alive) { return giveRound(ctx, 3, true, alive); }); },
+    playRound: function (ctx, level, i) {
+      var c = config(level, i);
+      return runner.run(function (alive, setCur) { return c.mode === 'give' ? giveRound(ctx, c.n, false, alive) : countRound(ctx, c.n, false, alive, setCur); });
+    },
+    cancelRound: function () {
+      runner.cancel();
+      if (st) { if (st.cancel) st.cancel(); st.grid.innerHTML = ''; st.tray.innerHTML = ''; st.ctx.stage.querySelectorAll('.kit-hand,.fr-fly').forEach(function (x) { x.remove(); }); }
+    },
+    outro: function (ctx) { return kit.dusk(ctx); },
+    endArt: function () { return kit.endScene('bear', h('div', { class: 'end-basket', html: basketSvg() })); },
+    destroy: function () { runner.stop(); st = null; },
+    _config: config,
+    _solveStep: function () {
+      if (!st) return false;
+      if (st.solve && st.solve()) return true;
+      if (st.answer) { st.answer.click(); return true; }
+      return false;
+    }
+  };
+})();
+
+</script>
+<script>
+/* لعبة «صيد الحروف» — تمييز أشكال الحروف. عالم بركة وأسماك.
+   الضفدع يحمل بطاقة حرف، والأسماك تسبح ببطء وعلى كل منها حرف.
+   تلمس الطفلة السمكة التي تحمل الحرف نفسه فتقفز إلى الدلو. ثلاث سمكات تُكمل الجولة.
+   المستويات: ١) حرف واحد مختلف تماماً  ٢) حرفان مختلفان  ٣) حروف متشابهة الشكل (ب ت ث…)
+              ٤) أسماك أكثر وأسرع قليلاً  ٥) أشكال الحرف في أول الكلمة (بـ تـ جـ) والبطاقة بالحرف المفرد.
+   لا تُختبر بالنطق: المطلوب مطابقة الشكل فقط. */
+(function () {
+  'use strict';
+  var B = (window.Bustan = window.Bustan || {});
+  var UI = B.UI, h = UI.h, art = B.art, kit = B.kit;
+
+  var ALL = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي';
+  var EASY = 'ابجدرسصطعفكلمنهي'; // بلا «و» لأنها تشبه الرقم ٩ في هذا الخط                    // أشكال متباعدة
+  var LOOK = ['بتثني', 'جحخ', 'دذ', 'رز', 'سش', 'صض', 'طظ', 'عغ', 'فق'];
+  var JOIN = 'بتثجحخسشصضطظعغفقكلمنهي';              // تتصل بما بعدها (لها شكل أول الكلمة)
+  var FISH_COLS = [['#FF8A3D', '#FFB27A'], ['#3D8BFD', '#8BB8FF'], ['#F2658E', '#FF9DB8'], ['#8E5CF0', '#B79BFF'], ['#2DBE7E', '#7FE0B0'], ['#FFC83D', '#FFE08A']];
+  var CFG = {
+    1: { dis: 1, lanes: 3, dur: 15 },
+    2: { dis: 2, lanes: 3, dur: 14 },
+    3: { dis: 2, lanes: 3, dur: 14, similar: true },
+    4: { dis: 3, lanes: 4, dur: 12, similar: true },
+    5: { dis: 3, lanes: 4, dur: 13, forms: true }
+  };
+
+  /* يبني جولة: الحرف المطلوب والمشتتات */
+  function makeRound(level, prev) {
+    var c = CFG[level], T, pool;
+    if (c.forms) {
+      do { T = kit.pick(JOIN.split('')); } while (T === prev);
+      pool = JOIN.replace(T, '');
+    } else if (c.similar) {
+      var groups = LOOK.filter(function (g) { return g.length >= 2; });
+      var grp = kit.pick(groups);
+      do { T = kit.pick(grp.split('')); } while (T === prev && grp.length > 1);
+      pool = grp.replace(T, '');
+      if (pool.length < c.dis) pool += kit.shuffle(EASY.replace(T, '').split('')).join('').slice(0, c.dis - pool.length + 1);
+    } else {
+      do { T = kit.pick(EASY.split('')); } while (T === prev);
+      // في المستوى ١ والثاني: مشتتات بعيدة الشكل عن الهدف
+      pool = EASY.split('').filter(function (x) { return x !== T && !LOOK.some(function (g) { return g.indexOf(x) >= 0 && g.indexOf(T) >= 0; }); }).join('');
+    }
+    var dis = kit.shuffle(pool.split('')).filter(function (x, i, a) { return a.indexOf(x) === i && x !== T; }).slice(0, c.dis);
+    return { level: level, target: T, dis: dis, forms: !!c.forms };
+  }
+  function glyph(L, forms) { return forms ? L + 'ـ' : L; } // شكل أول الكلمة بالتطويل
+
+  function fishSvg(col) {
+    return art.svg('0 0 140 90',
+      '<path d="M120 45L140 18V72Z" fill="' + col[0] + '" stroke="' + col[0] + '" stroke-width="6" stroke-linejoin="round"/>' +
+      '<path d="M68 14Q78 0 96 8L90 18Z" fill="' + col[0] + '"/>' +
+      '<ellipse cx="72" cy="45" rx="58" ry="38" fill="' + col[0] + '"/>' +
+      '<ellipse cx="76" cy="47" rx="34" ry="30" fill="#FAFCFF" opacity=".95"/>' +
+      '<circle cx="26" cy="36" r="7" fill="#fff"/><circle cx="24" cy="36" r="4" fill="#2B2340"/>' +
+      '<path d="M16 54q5 4 10 1" stroke="#2B2340" stroke-width="2.6" fill="none" stroke-linecap="round"/>' +
+      '<path d="M96 70Q104 84 116 80" stroke="' + col[1] + '" stroke-width="6" fill="none" stroke-linecap="round"/>', 'fish-svg');
+  }
+  function bucketSvg() {
+    return art.svg('0 0 100 90', '<path d="M8 20H92L82 84Q81 88 76 88H24Q19 88 18 84Z" fill="#5CC8FF" stroke="#2468D1" stroke-width="4" stroke-linejoin="round"/>' +
+      '<ellipse cx="50" cy="20" rx="42" ry="9" fill="#9FE0FF" stroke="#2468D1" stroke-width="4"/><path d="M10 20Q50 -18 90 20" fill="none" stroke="#3A4789" stroke-width="4"/>', 'bucket-svg');
+  }
+
+  var st = null, runner = kit.roundRunner();
+
+  function build(ctx) {
+    var stage = ctx.stage;
+    stage.classList.add('g-stage', 'lt-stage');
+    st.card = h('div', { class: 'lt-card' });
+    st.top = h('div', { class: 'lt-top' }, h('div', { class: 'lt-frog', html: art.animal('frog') }), st.card);
+    st.pond = h('div', { class: 'lt-pond' });
+    for (var b = 0; b < 7; b++) st.pond.appendChild(h('span', { class: 'lt-bubble', style: { left: 8 + b * 13 + '%', animationDelay: b * 0.9 + 's' } }));
+    st.slots = h('div', { class: 'lt-slots' });
+    st.bucket = h('div', { class: 'lt-bucket' }, h('div', { class: 'lt-bucket-art', html: bucketSvg() }), st.slots);
+    stage.appendChild(st.top);
+    stage.appendChild(st.pond);
+    stage.appendChild(st.bucket);
+  }
+
+  function assign(f) {
+    var R = st.R;
+    // نضمن وجود سمكة هدف واحدة على الأقل في البركة
+    var others = st.fish.filter(function (x) { return x !== f && x.L === R.target && !x.caught; }).length;
+    var isT = others === 0 || Math.random() < 0.38;
+    f.L = isT ? R.target : kit.pick(R.dis);
+    f.letter.textContent = glyph(f.L, R.forms);
+    f.caught = false;
+    f.el.classList.remove('caught', 'pulse-hint');
+    if (st.hintOn && f.L === R.target) f.el.classList.add('pulse-hint');
+  }
+
+  function buildFish(level) {
+    var c = CFG[level], vp = UI.vp(), pond = st.pond;
+    st.pond.querySelectorAll('.lt-fish').forEach(function (x) { x.remove(); });
+    st.fish = [];
+    var W = pond.clientWidth, H = pond.clientHeight;
+    var F = Math.min(vp.tablet ? 170 : 128, Math.max(vp.tap * 1.35, H / (c.lanes * 0.95)));
+    var lanes = Math.max(2, Math.min(c.lanes, Math.floor(H / (F * 0.72))));
+    var laneH = H / lanes;
+    for (var i = 0; i < lanes; i++) {
+      for (var j = 0; j < 2; j++) {
+        var col = FISH_COLS[(i * 2 + j) % FISH_COLS.length];
+        var letter = h('span', { class: 'lt-letter', style: { fontSize: F * 0.34 + 'px' } });
+        var inner = h('div', { class: 'lt-inner' }, h('div', { class: 'lt-body', html: fishSvg(col) }), letter);
+        var el = h('div', {
+          class: 'lt-fish', style: {
+            width: F + 'px', height: F * 90 / 140 + 'px', top: i * laneH + (laneH - F * 0.64) / 2 + 'px',
+            animationDuration: c.dur + (i % 2) * 1.5 + 's', animationDelay: -((j / 2) + i * 0.27) * (c.dur + (i % 2) * 1.5) + 's'
+          }
+        }, inner);
+        el.style.setProperty('--from', W + 10 + 'px');
+        el.style.setProperty('--to', -F - 10 + 'px');
+        var f = { el: el, inner: inner, letter: letter, L: '', caught: false };
+        (function (ff) {
+          el.addEventListener('pointerdown', function (e) { e.preventDefault(); tapFish(ff); });
+          el.addEventListener('animationiteration', function () { assign(ff); });
+        })(f);
+        st.fish.push(f);
+        pond.appendChild(el);
+      }
+    }
+    st.fish.forEach(assign);
+  }
+
+  function visibleTargets() {
+    var pr = st.pond.getBoundingClientRect();
+    return st.fish.filter(function (f) {
+      if (f.L !== st.R.target || f.caught) return false;
+      var r = f.el.getBoundingClientRect();
+      return r.left > pr.left + 4 && r.right < pr.right - 4;
+    });
+  }
+
+  function tapFish(f) {
+    var ctx = st.ctx;
+    if (!st.active || st.busy || f.caught || ctx.paused || (st.demo && !f.__auto)) return;
+    if (f.L === st.R.target) { catchFish(f); return; }
+    st.errors++; st.fails++;
+    kit.wrong(f.inner);
+    if (st.fails === 2) { st.hintOn = true; st.fish.forEach(function (x) { if (x.L === st.R.target) x.el.classList.add('pulse-hint'); }); }
+    if (st.fails >= 3) helpCatch();
+  }
+
+  async function helpCatch() {
+    var ctx = st.ctx, tok = st.tok;
+    st.busy = true;
+    var t = visibleTargets()[0];
+    while (!t) { await ctx.sleep(300); if (tok !== st.tok) return; t = visibleTargets()[0]; }
+    t.el.style.animationPlayState = 'paused';
+    var c = kit.center(t.el, ctx.stage), hd = kit.hand(ctx.stage, c.x, c.y);
+    await ctx.sleep(600); if (tok !== st.tok) return;
+    await hd.tap(); hd.el.remove();
+    t.el.style.animationPlayState = '';
+    st.busy = false;
+    t.__auto = true;
+    catchFish(t);
+    t.__auto = false;
+  }
+
+  function catchFish(f) {
+    var ctx = st.ctx;
+    f.caught = true;
+    st.fails = 0; st.hintOn = false;
+    st.fish.forEach(function (x) { x.el.classList.remove('pulse-hint'); });
+    var from = kit.center(f.el, ctx.stage), to = kit.center(st.bucket, ctx.stage);
+    // رشّة ماء ثم قفزة إلى الدلو
+    var ring = h('span', { class: 'lt-splash', style: { left: from.x + 'px', top: from.y + 'px' } });
+    ctx.stage.appendChild(ring);
+    UI.anim(ring, [{ transform: 'translate(-50%,-50%) scale(.2)', opacity: 1 }, { transform: 'translate(-50%,-50%) scale(1.6)', opacity: 0 }], { dur: 600 }).then(function () { ring.remove(); });
+    var fly = h('div', { class: 'lt-fly', style: { left: from.x - from.w / 2 + 'px', top: from.y - from.h / 2 + 'px', width: from.w + 'px', height: from.h + 'px' } });
+    fly.innerHTML = f.inner.outerHTML;
+    ctx.stage.appendChild(fly);
+    f.el.classList.add('caught');
+    if (B.audio) { B.audio.play('right'); B.audio.play('splash'); }
+    var dx = to.x - from.x, dy = to.y - from.y;
+    UI.anim(fly, [
+      { transform: 'translate(0,0) scale(1) rotate(0)' },
+      { transform: 'translate(' + dx * 0.5 + 'px,' + (Math.min(0, dy) - 90) + 'px) scale(.85) rotate(-30deg)', offset: 0.5 },
+      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(.3) rotate(-80deg)' }
+    ], { dur: 650, easing: 'ease-in-out' }).then(function () {
+      fly.remove();
+      var slot = st.slots.children[st.caught - 1];
+      if (slot) { slot.classList.add('on'); UI.anim(slot, [{ transform: 'scale(.3)' }, { transform: 'scale(1.3)' }, { transform: 'scale(1)' }], { dur: 380, easing: UI.SPRING, fill: 'none' }); }
+      if (B.audio) B.audio.play('place');
+    });
+    st.caught++;
+    if (st.caught >= st.need) { st.active = false; setTimeout(function () { if (st && st.done) st.done(true); }, 750 / UI.ts); }
+  }
+
+  async function round(ctx, level, demo, alive) {
+    var R = makeRound(level, st.prev);
+    st.prev = R.target; st.R = R;
+    st.errors = 0; st.fails = 0; st.caught = 0; st.need = demo ? 1 : 3; st.hintOn = false; st.busy = false; st.demo = demo;
+    st.tok = (st.tok || 0) + 1;
+    var finished = new Promise(function (r) { st.done = r; });
+    // البطاقة: الحرف المفرد كبيراً
+    st.card.innerHTML = '';
+    st.card.appendChild(h('span', { text: R.target }));
+    UI.anim(st.card, [{ transform: 'scale(.3) rotate(-12deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { dur: 480, easing: UI.SPRING, fill: 'backwards' });
+    if (B.audio) B.audio.play('card');
+    st.slots.innerHTML = '';
+    for (var i = 0; i < st.need; i++) st.slots.appendChild(h('span', { class: 'lt-slot', html: fishSvg(FISH_COLS[i]) }));
+    buildFish(level);
+    st.pond.classList.remove('calm');
+    await ctx.sleep(700);
+    if (!alive()) return;
+    st.active = true;
+    st.solve = function () { var t = visibleTargets()[0]; if (!t || st.busy || !st.active) return false; tapFish(t); return true; };
+    if (demo) { await ctx.sleep(900); if (!alive()) return; st.fails = 2; helpCatch(); }
+    var ok = await finished;
+    st.solve = null;
+    if (!alive() || !ok) return;
+    // الاحتفال: الأسماك تقفز فرحاً
+    st.pond.classList.add('calm');
+    if (B.audio) B.audio.play('cheer');
+    var c = kit.center(st.bucket, ctx.stage);
+    UI.burst(ctx.stage, c.x, c.y - 20, { n: 22, spread: 150, dur: 1400 });
+    st.fish.forEach(function (f, k) { UI.anim(f.inner, [{ transform: 'translateY(0)' }, { transform: 'translateY(-26px) rotate(-12deg)' }, { transform: 'translateY(0)' }], { dur: 600, delay: k * 70, fill: 'none', deco: true }); });
+    await ctx.sleep(1500);
+    if (!alive()) return;
+    return { errors: demo ? 0 : st.errors };
+  }
+
+  B.games.letters = {
+    id: 'letters',
+    mount: function (ctx) { st = { ctx: ctx }; build(ctx); },
+    demo: function (ctx) { return runner.run(function (alive) { return round(ctx, 1, true, alive); }); },
+    playRound: function (ctx, level) { return runner.run(function (alive) { return round(ctx, level, false, alive); }); },
+    cancelRound: function () {
+      runner.cancel();
+      if (st) { st.tok++; st.active = false; if (st.done) st.done(false); st.ctx.stage.querySelectorAll('.kit-hand,.lt-fly').forEach(function (x) { x.remove(); }); }
+    },
+    outro: function (ctx) { return kit.dusk(ctx); },
+    endArt: function () { return kit.endScene('frog', h('div', { class: 'end-basket', html: bucketSvg() })); },
+    destroy: function () { runner.stop(); if (st) st.tok++; st = null; },
+    _makeRound: makeRound,
+    _glyph: glyph,
+    _solveStep: function () { return !!(st && st.solve && st.solve()); }
+  };
+})();
+
+</script>
+<script>
+/* لعبة «بطاقات الذاكرة» — الذاكرة البصرية. عالم حديقة ليلية وبطاقات لامعة.
+   تُعرض البطاقات مكشوفة لحظة (تنبؤ قبل الفعل) ثم تُقلب، فتقلبها الطفلة اثنتين اثنتين لتجد الأزواج.
+   الزوجان غير المتطابقين يعودان بهدوء (ليس خطأ في الذاكرة)، والزوج المتطابق يبقى مكشوفاً ويلمع.
+   المستويات: ١) زوجان  ٢) ثلاثة  ٣) أربعة  ٤) ستة  ٥) ثمانية. ويقصر زمن المعاينة مع المستوى.
+   الأخطاء (للتكيّف الصامت) = المحاولات الزائدة عن عدد الأزواج.
+   سلّم المساعدة: إن طال البحث تُكشف البطاقات لحظة، ثم يدلّ الكفّ على زوج. */
+(function () {
+  'use strict';
+  var B = (window.Bustan = window.Bustan || {});
+  var UI = B.UI, h = UI.h, kit = B.kit;
+
+  var FACES = ['duck', 'bear', 'cat', 'rabbit', 'frog', 'lamb', 'owl', 'apple', 'strawberry', 'grapes', 'fish', 'butterfly',
+    'sun', 'balloon', 'car', 'flower', 'house', 'rocket', 'ball', 'tree', 'whale', 'bee', 'crown', 'train'];
+  var CFG = { 1: { pairs: 2, peek: 2600 }, 2: { pairs: 3, peek: 2600 }, 3: { pairs: 4, peek: 2400 }, 4: { pairs: 6, peek: 2200 }, 5: { pairs: 8, peek: 2000 } };
+
+  /* أبعاد الشبكة لعدد البطاقات: أكبر بطاقة تتسع */
+  function fit(n, W, H) {
+    var best = null;
+    for (var c = 1; c <= n; c++) {
+      if (n % c) continue;
+      var r = n / c, s = Math.min(W / c, (H / r) / 1.15);
+      if (!best || s > best.s) best = { c: c, r: r, s: s };
+    }
+    best.s = Math.floor(Math.min(best.s - 10, UI.vp().tablet ? 190 : 140));
+    return best;
+  }
+
+  var st = null, runner = kit.roundRunner();
+
+  function build(ctx) {
+    ctx.stage.classList.add('g-stage', 'mm-stage');
+    for (var i = 0; i < 18; i++) {
+      ctx.stage.appendChild(h('span', { class: 'mm-star', style: { left: Math.random() * 100 + '%', top: Math.random() * 100 + '%', animationDelay: Math.random() * 3 + 's' } }));
+    }
+    st.grid = h('div', { class: 'mm-grid' });
+    ctx.stage.appendChild(h('div', { class: 'g-main' }, st.grid));
+  }
+
+  function card(face) {
+    var front = h('div', { class: 'mm-face mm-front', html: B.pics.draw(face) });
+    var back = h('div', { class: 'mm-face mm-back' }, h('span', { class: 'mm-back-art', html: B.art.sparkle('#FFF7C2') }));
+    var el = h('button', { class: 'mm-card', type: 'button' }, h('div', { class: 'mm-flip' }, back, front));
+    return el;
+  }
+
+  async function round(ctx, level, demo, alive) {
+    var c = CFG[level], pairs = demo ? 2 : c.pairs, n = pairs * 2;
+    var faces = kit.shuffle(FACES).slice(0, pairs);
+    var deck = kit.shuffle(faces.concat(faces));
+    var g = fit(n, st.grid.parentNode.clientWidth - 10, st.grid.parentNode.clientHeight - 10);
+    st.grid.innerHTML = '';
+    st.grid.style.gridTemplateColumns = 'repeat(' + g.c + ',' + g.s + 'px)';
+    st.grid.style.gridAutoRows = Math.round(g.s * 1.15) + 'px';
+    var cards = deck.map(function (f, i) {
+      var el = card(f);
+      el.__face = f; el.__i = i;
+      st.grid.appendChild(el);
+      UI.anim(el, [{ transform: 'scale(0) rotate(-20deg)' }, { transform: 'none' }], { dur: 420, delay: i * 60, easing: UI.SPRING, fill: 'backwards' });
+      return el;
+    });
+    var open = [], matched = 0, tries = 0, busy = true, done, finished = new Promise(function (r) { done = r; });
+    var helped = false;
+
+    function flip(el, up) { el.classList.toggle('up', up); }
+    function pick(el) {
+      if (busy || el.classList.contains('up') || ctx.paused || (demo && !el.__auto)) return;
+      flip(el, true);
+      if (B.audio) B.audio.play('pick');
+      open.push(el);
+      if (open.length < 2) return;
+      tries++;
+      busy = true;
+      var a = open[0], b = open[1];
+      open = [];
+      if (a.__face === b.__face) {
+        setTimeout(function () {
+          a.classList.add('matched'); b.classList.add('matched');
+          if (B.audio) { B.audio.play('right'); B.audio.play('sparkle'); }
+          [a, b].forEach(function (x) { var p = kit.center(x, ctx.stage); UI.burst(ctx.stage, p.x, p.y, { n: 8, spread: 60, dur: 800 }); });
+          matched++;
+          busy = false;
+          if (matched === pairs) done(true);
+        }, 350 / UI.ts);
+      } else {
+        // لا يتطابقان: يعودان بهدوء
+        ctx.sleep(1000).then(function () {
+          flip(a, false); flip(b, false);
+          if (B.audio) B.audio.play('soft');
+          busy = false;
+          help();
+        });
+      }
+    }
+    cards.forEach(function (el) { UI.bindPress(el, function () { pick(el); }); });
+
+    /* سلّم المساعدة: بعد محاولات كثيرة تُكشف البطاقات لحظة، ثم يدلّ الكفّ على زوج */
+    async function help() {
+      var extra = tries - pairs;
+      if (extra === pairs + 2 && !helped) {
+        helped = true; busy = true;
+        cards.forEach(function (x) { if (!x.classList.contains('matched')) flip(x, true); });
+        await ctx.sleep(1300); if (!alive()) return;
+        cards.forEach(function (x) { if (!x.classList.contains('matched')) flip(x, false); });
+        await ctx.sleep(500);
+        busy = false;
+      } else if (extra >= pairs * 2 + 4) {
+        await showPair();
+      }
+    }
+    async function showPair() {
+      busy = true;
+      var left = cards.filter(function (x) { return !x.classList.contains('matched'); });
+      var a = left[0], b = left.filter(function (x) { return x !== a && x.__face === a.__face; })[0];
+      if (!a || !b) { busy = false; return; }
+      for (var k = 0; k < 2; k++) {
+        var el = k ? b : a, p = kit.center(el, ctx.stage), hd = kit.hand(ctx.stage, p.x, p.y + p.h * 0.1);
+        await ctx.sleep(550); if (!alive()) return;
+        await hd.tap(); hd.el.remove();
+        busy = false; el.__auto = true; pick(el); el.__auto = false; busy = true;
+        if (k === 0) busy = false;
+        await ctx.sleep(300); if (!alive()) return;
+      }
+    }
+
+    // معاينة: البطاقات مكشوفة لحظة ثم تُقلب
+    await ctx.sleep(350 + n * 60); if (!alive()) return;
+    cards.forEach(function (x) { flip(x, true); });
+    if (B.audio) B.audio.play('whoosh');
+    await ctx.sleep(demo ? 2600 : c.peek); if (!alive()) return;
+    cards.forEach(function (x) { flip(x, false); });
+    await ctx.sleep(600); if (!alive()) return;
+    busy = false;
+
+    st.solve = function () {
+      if (busy) return false;
+      var left = cards.filter(function (x) { return !x.classList.contains('matched') && !x.classList.contains('up'); });
+      var up = cards.filter(function (x) { return x.classList.contains('up') && !x.classList.contains('matched'); })[0];
+      var t = up ? left.filter(function (x) { return x.__face === up.__face; })[0] : left[0];
+      if (!t) return false;
+      pick(t); return true;
+    };
+    st.cancel = function () { done(false); };
+    if (demo) { // العرض التوضيحي: الكفّ يكشف الأزواج كلها زوجاً زوجاً
+      (async function () {
+        while (alive() && matched < pairs) {
+          await ctx.sleep(500); if (!alive()) return;
+          await showPair();
+          await ctx.sleep(500);
+        }
+      })();
+    }
+
+    var ok = await finished;
+    st.solve = null;
+    if (!alive() || !ok) return;
+    await ctx.sleep(400); if (!alive()) return;
+    if (B.audio) B.audio.play('cheer');
+    var p = kit.center(st.grid, ctx.stage);
+    UI.burst(ctx.stage, p.x, p.y, { n: 26, spread: 170, dur: 1500 });
+    cards.forEach(function (x, i) {
+      UI.anim(x, [{ transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-18px) rotate(' + (i % 2 ? 8 : -8) + 'deg)' }, { transform: 'translateY(0) rotate(0)' }], { dur: 600, delay: i * 50, fill: 'none', deco: true });
+    });
+    await ctx.sleep(1500); if (!alive()) return;
+    return { errors: demo ? 0 : Math.max(0, tries - pairs - Math.ceil(pairs / 2)) };
+  }
+
+  B.games.memory = {
+    id: 'memory',
+    mount: function (ctx) { st = { ctx: ctx }; build(ctx); },
+    demo: function (ctx) { return runner.run(function (alive) { return round(ctx, 1, true, alive); }); },
+    playRound: function (ctx, level) { return runner.run(function (alive) { return round(ctx, level, false, alive); }); },
+    cancelRound: function () { runner.cancel(); if (st) { if (st.cancel) st.cancel(); st.grid.innerHTML = ''; st.ctx.stage.querySelectorAll('.kit-hand').forEach(function (x) { x.remove(); }); } },
+    outro: function (ctx) { return kit.dusk(ctx); },
+    endArt: function () { return kit.endScene('owl'); },
+    destroy: function () { runner.stop(); st = null; },
+    _fit: fit,
+    _solveStep: function () { return !!(st && st.solve && st.solve()); }
+  };
+})();
+
+</script>
+<script>
 /* القسم الإبداعي: لعب حرّ بلا هدف ولا جولات ولا مصابيح.
-   ١) ورشة الأشكال: قطع ملوّنة شفافة مثل المكعبات المغناطيسية — تُضاف بنقرة، وتُسحب، وتدور بنقرة.
+   ١) ورشة الأشكال: ابنِ الصورة من الأشكال (بيت، صاروخ، قطار…)، تلتصق القطع في أماكنها كالمغناطيس.
    ٢) لوحة التلوين: رسمات بمناطق، تختار لوناً ثم تنقر المنطقة.
    عقد اللعب الحر (B.free[id]): open(ctx) و destroy(). */
 (function () {
   'use strict';
   var B = (window.Bustan = window.Bustan || {});
-  var UI = B.UI, h = UI.h, art = B.art;
+  var UI = B.UI, h = UI.h, art = B.art, kit = B.kit;
   B.free = B.free || {};
 
   var COLS = ['#F2658E', '#FFC83D', '#2DBE7E', '#3D8BFD', '#8E5CF0', '#FF8A3D', '#5CC8FF', '#F0485A'];
 
-  /* ═════════ ورشة الأشكال ═════════ */
-  var SHAPES = {
-    square: '<rect x="6" y="6" width="88" height="88" rx="10"/>',
-    triangle: '<polygon points="50,8 94,92 6,92"/>',
-    rect: '<rect x="6" y="28" width="88" height="44" rx="8"/>',
-    circle: '<circle cx="50" cy="50" r="44"/>',
-    diamond: '<polygon points="50,4 96,50 50,96 4,50"/>'
-  };
-  function piece(shape, col) {
-    // قطعة شفافة بحدّ لامع كالمكعب المغناطيسي
-    return '<svg viewBox="0 0 100 100"><g fill="' + col + '" fill-opacity=".72" stroke="' + col + '" stroke-width="6" stroke-linejoin="round">' + SHAPES[shape] + '</g>' +
-      '<g fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" stroke-linejoin="round" transform="translate(12 12) scale(.76)">' + SHAPES[shape] + '</g></svg>';
+  /* ═════════ ورشة الأشكال: ابنِ الصورة ═════════
+     صورة مرسومة بخطوط متقطعة (بيت، صاروخ، قطار…) تتكوّن من أشكال تعرفها:
+     مربع، مثلث، مستطيل، دائرة، معيّن. تسحب الشكل إلى مكانه فيلتصق كالمغناطيس
+     (أو تلمس الشكل ثم تلمس مكانه). الشكل في غير مكانه يعود بلطف إلى الصينية.
+     حين تكتمل الصورة تحيا: الصاروخ يطير، والسيارة تسير، ونوافذ البيت تُضاء. */
+
+  // رسم شكل داخل صندوق 0..100 (للأماكن والقطع): s = نوع الشكل
+  function shapePath(s) {
+    switch (s) {
+      case 'triangle': return '<polygon points="50,4 96,96 4,96"/>';
+      case 'circle': return '<circle cx="50" cy="50" r="48"/>';
+      case 'diamond': return '<polygon points="50,2 98,50 50,98 2,50"/>';
+      default: return '<rect x="2" y="2" width="96" height="96" rx="6"/>'; // مربع ومستطيل (الأبعاد من الصندوق)
+    }
+  }
+  /* الصور: كل قطعة {s: الشكل، x,y,w,h: الصندوق من ١٠٠، r: دوران، c: اللون} */
+  var Y = '#FFC83D', R = '#F0485A', G = '#2DBE7E', BL = '#3D8BFD', P = '#8E5CF0', O = '#FF8A3D', PK = '#F2658E', BR = '#B67B4D';
+  var PICS = [
+    { k: 'house', live: 'shine', parts: [
+      { s: 'square', x: 22, y: 44, w: 56, h: 46, c: Y }, { s: 'triangle', x: 14, y: 12, w: 72, h: 34, c: R },
+      { s: 'rect', x: 43, y: 64, w: 15, h: 26, c: BR }, { s: 'square', x: 28, y: 52, w: 12, h: 12, c: BL, win: 1 }, { s: 'square', x: 61, y: 52, w: 12, h: 12, c: BL, win: 1 }] },
+    { k: 'tree', live: 'bounce', parts: [
+      { s: 'rect', x: 43, y: 58, w: 14, h: 36, c: BR }, { s: 'circle', x: 20, y: 6, w: 60, h: 58, c: G },
+      { s: 'circle', x: 34, y: 22, w: 11, h: 11, c: R }, { s: 'circle', x: 57, y: 38, w: 11, h: 11, c: R }] },
+    { k: 'rocket', live: 'fly', parts: [
+      { s: 'rect', x: 38, y: 30, w: 24, h: 50, c: '#FAFCFF' }, { s: 'triangle', x: 38, y: 6, w: 24, h: 25, c: R },
+      { s: 'circle', x: 43, y: 40, w: 14, h: 14, c: BL }, { s: 'triangle', x: 22, y: 62, w: 17, h: 24, c: P }, { s: 'triangle', x: 61, y: 62, w: 17, h: 24, c: P },
+      { s: 'diamond', x: 42, y: 80, w: 16, h: 16, c: O }] },
+    { k: 'car', live: 'drive', parts: [
+      { s: 'rect', x: 8, y: 46, w: 84, h: 26, c: BL }, { s: 'rect', x: 26, y: 24, w: 46, h: 23, c: BL },
+      { s: 'square', x: 32, y: 29, w: 14, h: 14, c: '#D6EEFF' }, { s: 'square', x: 52, y: 29, w: 14, h: 14, c: '#D6EEFF' },
+      { s: 'circle', x: 16, y: 62, w: 22, h: 22, c: '#1F2A5A' }, { s: 'circle', x: 62, y: 62, w: 22, h: 22, c: '#1F2A5A' }] },
+    { k: 'boat', live: 'drive', parts: [
+      { s: 'rect', x: 14, y: 66, w: 72, h: 16, c: BR }, { s: 'rect', x: 47, y: 14, w: 6, h: 52, c: '#8A5A33' },
+      { s: 'triangle', x: 54, y: 16, w: 30, h: 46, c: PK }, { s: 'triangle', x: 18, y: 26, w: 28, h: 36, c: Y }, { s: 'circle', x: 28, y: 70, w: 8, h: 8, c: '#FAFCFF' }] },
+    { k: 'train', live: 'drive', parts: [
+      { s: 'rect', x: 8, y: 44, w: 52, h: 28, c: G }, { s: 'square', x: 58, y: 28, w: 32, h: 44, c: Y }, { s: 'rect', x: 16, y: 26, w: 12, h: 18, c: '#1F2A5A' },
+      { s: 'square', x: 66, y: 35, w: 16, h: 16, c: '#D6EEFF' }, { s: 'circle', x: 14, y: 64, w: 20, h: 20, c: '#1F2A5A' }, { s: 'circle', x: 38, y: 64, w: 20, h: 20, c: '#1F2A5A' },
+      { s: 'circle', x: 66, y: 62, w: 22, h: 22, c: '#1F2A5A' }] },
+    { k: 'flower', live: 'bounce', parts: [
+      { s: 'rect', x: 47, y: 50, w: 6, h: 44, c: G }, { s: 'diamond', x: 52, y: 64, w: 20, h: 14, c: G },
+      { s: 'circle', x: 38, y: 6, w: 24, h: 24, c: PK }, { s: 'circle', x: 58, y: 24, w: 24, h: 24, c: PK }, { s: 'circle', x: 38, y: 42, w: 24, h: 24, c: PK },
+      { s: 'circle', x: 18, y: 24, w: 24, h: 24, c: PK }, { s: 'circle', x: 40, y: 26, w: 20, h: 20, c: Y }] },
+    { k: 'kite', live: 'fly', parts: [
+      { s: 'diamond', x: 22, y: 6, w: 56, h: 60, c: O }, { s: 'diamond', x: 38, y: 22, w: 24, h: 28, c: Y },
+      { s: 'triangle', x: 44, y: 66, w: 12, h: 10, c: PK }, { s: 'triangle', x: 48, y: 78, w: 12, h: 10, c: BL }, { s: 'triangle', x: 44, y: 88, w: 12, h: 10, c: G }] }
+  ];
+  function key(pt) { return pt.s + ':' + Math.round(pt.w) + 'x' + Math.round(pt.h); } // القطع المتطابقة يمكن تبادلها
+
+  function partSvg(pt, cls, fill, extra) {
+    return '<svg class="' + cls + '" viewBox="0 0 100 100" preserveAspectRatio="none" style="left:' + pt.x + '%;top:' + pt.y + '%;width:' + pt.w + '%;height:' + pt.h + '%"' + (extra || '') + '>' +
+      '<g ' + fill + ' vector-effect="non-scaling-stroke">' + shapePath(pt.s) + '</g></svg>';
   }
 
   var ws = null;
@@ -4392,85 +5352,160 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     open: function (ctx) {
       var stage = ctx.stage, vp = UI.vp();
       stage.classList.add('g-stage', 'ws-stage');
-      var size = vp.tablet ? 120 : 88, colorIdx = 0, z = 1;
-      var canvas = h('div', { class: 'ws-canvas' });
-      var tray = h('div', { class: 'g-tray ws-tray' });
-      ws = { pieces: [] };
+      var board = h('div', { class: 'ws-board' });
+      var tray = h('div', { class: 'ws-tray' });
+      var nextBtn = h('button', { class: 'g-choice ws-next', type: 'button', 'aria-label': B.S.create.next, html: B.art.playIcon() });
+      ws = { idx: Math.floor(Math.random() * PICS.length), sel: null };
+      stage.appendChild(h('div', { class: 'g-main ws-main' }, board));
+      stage.appendChild(h('div', { class: 'ws-bottom' }, tray, nextBtn));
+      UI.bindPress(nextBtn, function () { ws.idx = (ws.idx + 1) % PICS.length; if (B.audio) B.audio.play('whoosh'); show(); });
 
-      function add(shape, btn) {
-        var r = canvas.getBoundingClientRect();
-        var x = r.width / 2 - size / 2 + (Math.random() - 0.5) * r.width * 0.5;
-        var y = r.height / 2 - size / 2 + (Math.random() - 0.5) * r.height * 0.4;
-        var el = h('div', { class: 'ws-piece', style: { width: size + 'px', height: size + 'px', zIndex: ++z }, html: piece(shape, COLS[colorIdx]) });
-        var p = { el: el, x: x, y: y, rot: 0 };
-        place(p);
-        canvas.appendChild(el);
-        ws.pieces.push(p);
-        if (ws.pieces.length > 40) { var old = ws.pieces.shift(); old.el.remove(); }
-        UI.anim(el.firstChild, [{ transform: 'scale(.2)' }, { transform: 'scale(1.15)' }, { transform: 'scale(1)' }], { dur: 420, easing: UI.SPRING, fill: 'none' });
-        if (B.audio) B.audio.play('pop');
-        drag(p);
+      function show() {
+        var pic = PICS[ws.idx];
+        board.innerHTML = ''; tray.innerHTML = '';
+        nextBtn.classList.remove('ready');
+        ws.sel = null;
+        var art = h('div', { class: 'ws-art' });
+        board.appendChild(art);
+        ws.slots = pic.parts.map(function (pt, i) {
+          // المكان: شكل متقطع، ومساحة لمس شفافة لا تقل عن حدّ اللمس
+          var el = h('div', { class: 'ws-slot', 'data-i': i, html: partSvg(pt, 'ws-ghost', 'fill="rgba(255,255,255,.6)" stroke="#8FA0D8" stroke-width="3" stroke-dasharray="7 6"') });
+          art.appendChild(el);
+          return { el: el, pt: pt, k: key(pt), filled: false };
+        });
+        // القطع في الصينية، مختلطة
+        kit.shuffle(pic.parts.map(function (pt, i) { return i; })).forEach(function (i, n) {
+          var pt = pic.parts[i];
+          var ar = pt.w / pt.h, iw = ar >= 1 ? 76 : 76 * ar, ih = ar >= 1 ? 76 / ar : 76;
+          var b = h('button', { class: 'ws-piece-btn', type: 'button' },
+            h('span', { class: 'ws-piece-art', style: { width: iw + '%', height: ih + '%' }, html: '<svg viewBox="0 0 100 100" preserveAspectRatio="none"><g fill="' + pt.c + '" stroke="rgba(31,42,90,.35)" stroke-width="3" vector-effect="non-scaling-stroke">' + shapePath(pt.s) + '</g></svg>' }));
+          b.__pt = pt; b.__k = key(pt);
+          tray.appendChild(b);
+          UI.anim(b, [{ transform: 'scale(0)' }, { transform: 'scale(1)' }], { dur: 380, delay: 200 + n * 70, easing: UI.SPRING, fill: 'backwards' });
+          dragify(b);
+        });
+        UI.anim(art, [{ opacity: 0, transform: 'scale(.9)' }, { opacity: 1, transform: 'none' }], { dur: 450, easing: UI.SPRING, fill: 'none' });
+        layout();
       }
-      function place(p) { p.el.style.transform = 'translate3d(' + p.x + 'px,' + p.y + 'px,0) rotate(' + p.rot + 'deg)'; }
-      function drag(p) {
-        var sx, sy, ox, oy, moved, active = false;
-        p.el.addEventListener('pointerdown', function (e) {
-          active = true; moved = false; sx = e.clientX; sy = e.clientY; ox = p.x; oy = p.y;
-          p.el.style.zIndex = ++z; p.el.classList.add('lift');
-          try { p.el.setPointerCapture(e.pointerId); } catch (err) {}
+      function layout() { // اللوحة مربعة بأكبر حجم يتسع
+        var m = board.parentNode, s = Math.min(m.clientWidth - 8, m.clientHeight - 8);
+        board.style.width = board.style.height = Math.max(160, s) + 'px';
+      }
+
+      function slotAt(k, x, y) { // أقرب مكان فارغ مطابق تحت الإصبع (مسافة التقاط متسامحة)
+        var best = null, bd = 1e9;
+        ws.slots.forEach(function (sl) {
+          if (sl.filled || sl.k !== k) return;
+          var r = sl.el.querySelector('svg').getBoundingClientRect();
+          var cx = r.left + r.width / 2, cy = r.top + r.height / 2, d = Math.hypot(cx - x, cy - y);
+          var tol = Math.max(70, Math.max(r.width, r.height) * 0.6);
+          if (d < tol && d < bd) { bd = d; best = sl; }
         });
-        p.el.addEventListener('pointermove', function (e) {
-          if (!active) return;
-          var dx = e.clientX - sx, dy = e.clientY - sy;
-          if (Math.abs(dx) + Math.abs(dy) > 8) moved = true;
-          p.x = ox + dx; p.y = oy + dy; place(p);
+        return best;
+      }
+      function firstFree(k) { return ws.slots.filter(function (sl) { return !sl.filled && sl.k === k; })[0]; }
+
+      function place(b, sl) {
+        sl.filled = true;
+        var pt = sl.pt;
+        sl.el.innerHTML = partSvg(pt, 'ws-fill' + (pt.win ? ' win' : ''), 'fill="' + pt.c + '" stroke="rgba(31,42,90,.35)" stroke-width="3"');
+        var sv = sl.el.firstChild;
+        UI.anim(sv, [{ transform: 'scale(1.35)', opacity: 0.4 }, { transform: 'scale(.92)', opacity: 1, offset: 0.6 }, { transform: 'scale(1)', opacity: 1 }], { dur: 380, easing: UI.SPRING, fill: 'none' });
+        if (B.audio) B.audio.play('place'); // صوت «طق» المغناطيس
+        b.remove();
+        ws.sel = null;
+        if (ws.slots.every(function (x) { return x.filled; })) complete();
+      }
+      function reject(b) { // يعود الشكل بلطف إلى الصينية
+        kit.wrong(b);
+        b.classList.remove('picked');
+      }
+
+      function dragify(b) {
+        var ghost = null, sx = 0, sy = 0, moved = false;
+        b.addEventListener('pointerdown', function (e) {
+          if (ctx.paused) return;
+          sx = e.clientX; sy = e.clientY; moved = false;
+          try { b.setPointerCapture(e.pointerId); } catch (err) {}
+          if (B.audio) B.audio.play('pick');
         });
-        function end() {
-          if (!active) return;
-          active = false; p.el.classList.remove('lift');
-          var r = canvas.getBoundingClientRect();
-          if (moved) { // التصاق مغناطيسي بشبكة خفية
-            var g = size / 4;
-            p.x = Math.max(-size * 0.3, Math.min(r.width - size * 0.7, Math.round(p.x / g) * g));
-            p.y = Math.max(-size * 0.3, Math.min(r.height - size * 0.7, Math.round(p.y / g) * g));
-            if (B.audio) B.audio.play('place');
-          } else { p.rot += 45; if (B.audio) B.audio.play('pick'); } // نقرة بلا سحب: دوران
-          p.el.classList.add('snap'); place(p);
-          setTimeout(function () { p.el.classList.remove('snap'); }, 320);
+        b.addEventListener('pointermove', function (e) {
+          if (!b.hasPointerCapture || !b.hasPointerCapture(e.pointerId)) return;
+          if (!moved && Math.hypot(e.clientX - sx, e.clientY - sy) < 10) return;
+          if (!moved) {
+            moved = true;
+            // قطعة تتبع الإصبع بحجمها في الصورة
+            var br = board.getBoundingClientRect(), pt = b.__pt;
+            ghost = h('div', { class: 'ws-drag', style: { width: br.width * pt.w / 100 + 'px', height: br.height * pt.h / 100 + 'px' },
+              html: '<svg viewBox="0 0 100 100" preserveAspectRatio="none"><g fill="' + pt.c + '" stroke="rgba(31,42,90,.35)" stroke-width="3" vector-effect="non-scaling-stroke">' + shapePath(pt.s) + '</g></svg>' });
+            document.body.appendChild(ghost);
+            b.classList.add('lifted');
+          }
+          ghost.style.transform = 'translate(' + (e.clientX - ghost.offsetWidth / 2) + 'px,' + (e.clientY - ghost.offsetHeight / 2) + 'px)';
+        });
+        function up(e) {
+          if (ghost) { ghost.remove(); ghost = null; }
+          b.classList.remove('lifted');
+          if (!b.isConnected) return;
+          if (moved) {
+            var sl = slotAt(b.__k, e.clientX, e.clientY);
+            if (sl) place(b, sl); else reject(b);
+          } else {
+            // نقرة: اختيار الشكل (ثم لمس مكانه)
+            tray.querySelectorAll('.picked').forEach(function (x) { x.classList.remove('picked'); });
+            ws.sel = b; b.classList.add('picked');
+          }
         }
-        p.el.addEventListener('pointerup', end);
-        p.el.addEventListener('pointercancel', end);
+        b.addEventListener('pointerup', up);
+        b.addEventListener('pointercancel', function () { if (ghost) { ghost.remove(); ghost = null; } b.classList.remove('lifted'); });
+      }
+      // لمس مكان بعد اختيار شكل
+      board.addEventListener('pointerdown', function (e) {
+        if (!ws.sel || ctx.paused) return;
+        var sl = slotAt(ws.sel.__k, e.clientX, e.clientY);
+        if (sl) place(ws.sel, sl);
+        else {
+          // لمس مكان لا يناسب هذا الشكل
+          var any = ws.slots.some(function (x) { var r = x.el.querySelector('svg').getBoundingClientRect(); return !x.filled && e.clientX > r.left - 20 && e.clientX < r.right + 20 && e.clientY > r.top - 20 && e.clientY < r.bottom + 20; });
+          if (any) reject(ws.sel);
+        }
+      });
+
+      function complete() {
+        var pic = PICS[ws.idx], art = board.querySelector('.ws-art');
+        if (B.audio) { B.audio.play('cheer'); }
+        var c = kit.center(board, stage);
+        UI.burst(stage, c.x, c.y, { n: 26, spread: 170, dur: 1500 });
+        board.classList.add('done');
+        if (pic.live === 'fly') {
+          if (B.audio) B.audio.play('whoosh');
+          UI.anim(art, [{ transform: 'translateY(0)' }, { transform: 'translateY(8px)', offset: 0.15 }, { transform: 'translateY(-120%)', offset: 0.6 }, { transform: 'translateY(-120%)', offset: 0.61, opacity: 0 }, { transform: 'translateY(30%)', opacity: 0, offset: 0.62 }, { transform: 'translateY(0)', opacity: 1 }], { dur: 2600, easing: 'ease-in-out', fill: 'none' });
+        } else if (pic.live === 'drive') {
+          if (B.audio) B.audio.play('toot');
+          UI.anim(art, [{ transform: 'translateX(0)' }, { transform: 'translateX(-130%)', offset: 0.45 }, { transform: 'translateX(-130%)', opacity: 0, offset: 0.46 }, { transform: 'translateX(130%)', opacity: 0, offset: 0.47 }, { transform: 'translateX(0)', opacity: 1 }], { dur: 2600, easing: 'ease-in-out', fill: 'none' });
+        } else if (pic.live === 'shine') {
+          board.querySelectorAll('.ws-fill.win g').forEach(function (g) { g.setAttribute('fill', '#FFE45E'); });
+          UI.anim(art, [{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { dur: 700, easing: UI.SPRING, fill: 'none' });
+        } else {
+          UI.anim(art, [{ transform: 'rotate(0)' }, { transform: 'rotate(-5deg) scale(1.05)' }, { transform: 'rotate(5deg) scale(1.05)' }, { transform: 'rotate(0)' }], { dur: 1000, fill: 'none' });
+        }
+        // زر الصورة التالية يظهر وينبض (لا انتقال مفاجئ)
+        setTimeout(function () { if (ws) { nextBtn.classList.add('ready'); board.classList.remove('done'); } }, 1400 / UI.ts);
       }
 
-      // شريط الأدوات: زر اللون ثم الأشكال الخمسة ثم المكنسة
-      var shapeBtns = [];
-      var colorBtn = h('button', { class: 'g-choice ws-color', type: 'button', 'aria-label': B.S.create.color }, h('span', { class: 'ws-dot' }));
-      function paint() {
-        colorBtn.firstChild.style.background = COLS[colorIdx];
-        shapeBtns.forEach(function (b) { b.innerHTML = piece(b.getAttribute('data-shape'), COLS[colorIdx]); });
-      }
-      UI.bindPress(colorBtn, function () { colorIdx = (colorIdx + 1) % COLS.length; paint(); if (B.audio) B.audio.play('pick'); });
-      tray.appendChild(colorBtn);
-      Object.keys(SHAPES).forEach(function (s) {
-        var b = h('button', { class: 'g-choice ws-shape', type: 'button', 'data-shape': s });
-        UI.bindPress(b, function () { add(s, b); });
-        shapeBtns.push(b); tray.appendChild(b);
-      });
-      var broom = h('button', { class: 'g-choice ws-broom', type: 'button', 'aria-label': B.S.create.clear, html: art.svg('0 0 100 100', '<path d="M62 8L44 52" stroke="#8A5A33" stroke-width="9" stroke-linecap="round"/><path d="M26 50L62 60L56 92Q36 96 16 84Z" fill="#FFD34E" stroke="#E2A21B" stroke-width="4" stroke-linejoin="round"/><path d="M30 64l-4 22M42 66l-2 24M52 68l-1 22" stroke="#E2A21B" stroke-width="3" stroke-linecap="round"/>') });
-      UI.bindPress(broom, function () {
-        if (!ws.pieces.length) return;
-        if (B.audio) B.audio.play('sweep');
-        ws.pieces.forEach(function (p, i) {
-          UI.anim(p.el, [{ opacity: 1 }, { opacity: 0, transform: p.el.style.transform + ' translateY(80px) scale(.6)' }], { dur: 450, delay: i * 20 }).then(function () { p.el.remove(); });
-        });
-        ws.pieces = [];
-      });
-      tray.appendChild(broom);
-      paint();
-      stage.appendChild(canvas);
-      stage.appendChild(tray);
+      ws.solve = function () { // للاختبار الآلي
+        var b = tray.querySelector('.ws-piece-btn');
+        if (!b) return false;
+        var sl = firstFree(b.__k); if (sl) place(b, sl);
+        return true;
+      };
+      ws.onResize = function () { layout(); };
+      window.addEventListener('resize', ws.onResize);
+      requestAnimationFrame(show);
     },
-    destroy: function () { ws = null; }
+    destroy: function () { if (ws) window.removeEventListener('resize', ws.onResize); ws = null; },
+    _pics: function () { return PICS; },
+    _solve: function () { return !!(ws && ws.solve && ws.solve()); }
   };
 
   /* ═════════ لوحة التلوين ═════════ */
