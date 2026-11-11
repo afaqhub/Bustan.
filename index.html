@@ -317,6 +317,12 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 .p-ta { width: 100%; border: 3px solid #D9E5FB; border-radius: 14px; padding: 10px; font-size: 15px; resize: none; font-family: inherit; background: #fff; }
 .p-msg { min-height: 26px; font-size: 18px; font-weight: 800; color: var(--meadow-deep); }
 .p-warn { background: #FFF1C4; border-radius: 14px; padding: 10px 14px; font-size: 16px; }
+/* شريط «ملاحظة أو مقترح؟» في أسفل الرئيسية (للآباء؛ ليس زراً حتى لا يُحسب بين أزرار الطفل) */
+.fb-pill { position: absolute; z-index: 6; left: 0; right: 0; bottom: calc(8px + var(--safe-b)); margin: 0 auto; width: max-content; max-width: 90%;
+  padding: 8px 20px; border-radius: 999px; background: rgba(255, 255, 255, .88); color: var(--night-soft); font-size: 16px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 3px 0 var(--lilac-deep); text-align: center; }
+.fb-pill:active { transform: translateY(2px); }
+.zones { bottom: calc(52px + var(--safe-b)) !important; }
 
 </style>
 <style>
@@ -943,8 +949,8 @@ textarea, input { -webkit-user-select: text; user-select: text; }
         title: 'أول صوت — دورك معها',
         steps: [
           'انطق اسم الصورة بصوتك بوضوح (الاسم مكتوب تحت الصورة).',
-          'تختار الطفلة الحرف الذي تبدأ به الكلمة من البطاقات الثلاث.',
-          'في المستوى الأخير تظهر ثلاث صور معاً: انطق أسماءها، وتلمس الطفلة الصورتين المتشابهتين في آخر الكلمة، مثل: بطة وقطة.',
+          'تختار الطفل الحرف الذي تبدأ به الكلمة من البطاقات الثلاث.',
+          'في المستوى الأخير تظهر ثلاث صور معاً: انطق أسماءها، وتلمس الطفل الصورتين المتشابهتين في آخر الكلمة، مثل: بطة وقطة.',
           'لا تصحّح نطقها. المطلوب أن تسمع أول الكلمة فقط.'
         ]
       },
@@ -953,14 +959,14 @@ textarea, input { -webkit-user-select: text; user-select: text; }
         steps: [
           'في الأعلى صورة الموقف، وتحتها جملة ناقصة.',
           'اقرأ الجملة بصوتك، وتوقّف عند آخرها.',
-          'تختار الطفلة الصورة التي تُكمل الجملة.',
+          'تختار الطفل الصورة التي تُكمل الجملة.',
           'بعد اختيارها تكتمل الجملة، فأعد قراءتها كاملة.'
         ]
       },
       go: 'هيّا نبدأ',
-      fsLetter: 'انطق الكلمة، والطفلة تختار أول حرف فيها',
-      fsRhyme: 'انطق الكلمات الثلاث، والطفلة تلمس الكلمتين المتشابهتين في آخرهما',
-      brRead: 'اقرأ الجملة، والطفلة تختار الصورة التي تُكملها'
+      fsLetter: 'انطق الكلمة، والطفل تختار أول حرف فيها',
+      fsRhyme: 'انطق الكلمات الثلاث، والطفل تلمس الكلمتين المتشابهتين في آخرهما',
+      brRead: 'اقرأ الجملة، والطفل تختار الصورة التي تُكملها'
     },
 
     create: { color: 'تغيير اللون', clear: 'تنظيف اللوحة', next: 'رسمة أخرى' },
@@ -974,7 +980,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
       close: 'إغلاق'
     },
 
-    // نصوص الوالدين فقط (لا تظهر للطفلة إلا بعد ضغطة ٣ ثوانٍ)
+    // نصوص الوالدين فقط (لا تظهر للطفل إلا بعد ضغطة ٣ ثوانٍ)
     parent: {
       title: 'ركن الوالدين',
       sessions: 'الجلسات',
@@ -1008,10 +1014,21 @@ textarea, input { -webkit-user-select: text; user-select: text; }
       notBuilt: 'قيد البناء',
       weekly: 'رابط الأسبوع في «جسر الروابط»',
       weeklyAuto: 'حسب المستوى',
-      connectors: ['لكنْ', 'لأنّ', 'لذلك', 'بينما'],
+      connectors: ['لكنْ', 'لأنّ', 'لذلك', 'لكنَّ'],
       daysShort: ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت']
     },
 
+    /* بريد الاقتراحات مشفّر (base64) كي لا يظهر نصاً صريحاً لمن يفحص الصفحة */
+    feedbackMail: 'dHJpZmxlbWFuZ28xNDQ0QGdtYWlsLmNvbQ==',
+    feedback: {
+      pill: 'ملاحظة أو مقترح؟',
+      title: 'أي ملاحظة أو مقترح؟',
+      note: 'يسعدنا رأيك: لعبة لم تعجب طفلك، فكرة جديدة، أو أي شيء يخطر لك. سيفتح بريدك لإرسالها.',
+      text: 'اكتب هنا',
+      contact: 'وسيلة تواصل (اختياري): بريد أو جوال',
+      send: 'إرسال',
+      subject: 'اقتراح على بستان الصغار'
+    },
     noscript: 'يحتاج هذا التطبيق إلى تفعيل جافاسكربت.'
   };
 })();
@@ -1249,7 +1266,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
    يصعد بعد ٣ جولات سلسة متتالية (≤ خطأ واحد)،
    ويهبط بعد جولتين متتاليتين فيهما ٣ أخطاء فأكثر.
    جولة فيها خطآن لا تُعدّ سلسة ولا صعبة، فتقطع السلسلتين.
-   لا يظهر للطفلة أي أثر لهذا. */
+   لا يظهر للطفل أي أثر لهذا. */
 (function () {
   'use strict';
   var B = (window.Bustan = window.Bustan || {});
@@ -1291,7 +1308,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 </script>
 <script>
 /* الصوت: مؤثرات ناعمة مولَّدة بـ WebAudio (لا ملفات صوت)، بلا موسيقى خلفية ولا نطق آلي.
-   كل الأصوات قصيرة وهادئة، تمرّ عبر ضاغط يمنع أي ذروة عالية (الطفلة حساسة للأصوات العالية).
+   كل الأصوات قصيرة وهادئة، تمرّ عبر ضاغط يمنع أي ذروة عالية (الطفل حساسة للأصوات العالية).
    لا يوجد أي صوت «خطأ» أو «خسارة». مفتاح عام في ركن الوالدين.
    يُفعَّل السياق بعد أول لمسة (قيد iOS). */
 (function () {
@@ -2526,7 +2543,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
      outro(ctx)       → Promise  خروج هادئ من المشهد قبل الختام
      endArt(ctx)      → Element  رسمة الشاشة الختامية
      destroy()                   تنظيف (مؤقتات، rAF)
-   ملاحظة: ctx.sleep وctx.anim لا ينتهيان إذا غادرت الطفلة اللعبة (لا أخطاء متأخرة). */
+   ملاحظة: ctx.sleep وctx.anim لا ينتهيان إذا غادرت الطفل اللعبة (لا أخطاء متأخرة). */
 (function () {
   'use strict';
   var B = (window.Bustan = window.Bustan || {});
@@ -2857,7 +2874,9 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     );
 
     var zones = h('main', { class: 'zones' }, zone('solo', locked), zone('together', false), zone('create', false));
-    var el = h('div', { class: 'screen home' }, sky, zones, logo);
+    var fbPill = h('div', { class: 'fb-pill', role: 'button', tabindex: '0', text: B.S.feedback.pill });
+    fbPill.addEventListener('click', function () { B.feedback.open(); });
+    var el = h('div', { class: 'screen home' }, sky, zones, logo, fbPill);
 
     // ظهور متتابع بحركة زنبركية (بعد الإدراج في الصفحة)
     requestAnimationFrame(function () {
@@ -2884,7 +2903,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 </script>
 <script>
 /* ركن الوالدين (مبسّط في المرحلة ١): إحصاءات، حدّ «وحدي»، الصوت، النسخ الاحتياطي، إعادة الضبط.
-   لا يظهر له أثر للطفلة: لا زر ولا إشارة؛ يُفتح بضغطة مطولة ٣ ثوانٍ على زاوية الشعار.
+   لا يظهر له أثر للطفل: لا زر ولا إشارة؛ يُفتح بضغطة مطولة ٣ ثوانٍ على زاوية الشعار.
    النصوص كلها عربية؛ ولا يُعرض نص JSON أبداً (النسخ عبر الحافظة أو ملف). */
 (function () {
   'use strict';
@@ -3092,6 +3111,31 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     overlay = null;
     B.storage.save();
   }
+
+  /* نافذة الاقتراحات (من الرئيسية): نص + وسيلة تواصل اختيارية، والإرسال عبر mailto إلى بريد صاحب المشروع */
+  var fbOverlay = null;
+  function openFeedback() {
+    if (fbOverlay) return;
+    var F = B.S.feedback;
+    var ta = h('textarea', { class: 'p-ta', rows: 5, placeholder: F.text });
+    var ct = h('input', { class: 'p-ta', type: 'text', placeholder: F.contact, style: { minHeight: '48px' } });
+    var send = h('button', { class: 'p-btn', type: 'button', text: F.send });
+    var close = h('button', { class: 'p-close', type: 'button', text: '✕', 'aria-label': B.S.buttons.close });
+    function shut() { fbOverlay.remove(); fbOverlay = null; }
+    close.addEventListener('click', shut);
+    send.addEventListener('click', function () {
+      if (!ta.value.trim()) { ta.focus(); return; }
+      var to = ''; try { to = atob(B.S.feedbackMail); } catch (e) {}
+      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(F.subject) +
+        '&body=' + encodeURIComponent(ta.value + (ct.value.trim() ? '\n\n' + ct.value.trim() : ''));
+    });
+    fbOverlay = h('div', { class: 'parent-overlay', role: 'dialog' },
+      h('div', { class: 'p-card' },
+        h('header', { class: 'p-head' }, h('h2', { text: F.title }), close),
+        h('div', { class: 'p-body' }, h('div', { class: 'p-line', text: F.note }), ta, ct, send)));
+    document.body.appendChild(fbOverlay);
+  }
+  B.feedback = { open: openFeedback };
 
   B.parent = { open: open, close: close, isOpen: function () { return !!overlay; } };
 })();
@@ -3669,7 +3713,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
   async function finishRound(tok) {
     var ctx = st.ctx, g = st.G;
     st.phase = 'cheer';
-    // علامة «تمّ» فوراً مكان الشكل المطلوب، فلا تظن الطفلة أنه ما زال مطلوباً
+    // علامة «تمّ» فوراً مكان الشكل المطلوب، فلا تظن الطفل أنه ما زال مطلوباً
     var cd = st.el.card;
     cd.classList.remove('two', 'inverted');
     cd.innerHTML = '<span class="card-sym">' + art.check() + '</span>';
@@ -3951,7 +3995,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 </script>
 <script>
 /* لعبة «مرآة الأشكال» — التماثل والتفكير المكاني. عالم أقمشة وفراشات.
-   شبكة بخط منتصف يشبه ثنية قماش. نصفها ملوّن، وعلى الطفلة أن تبني النصف المطابق انعكاساً.
+   شبكة بخط منتصف يشبه ثنية قماش. نصفها ملوّن، وعلى الطفل أن تبني النصف المطابق انعكاساً.
    تختار لوناً من الأسفل بنقرة ثم تنقر الخانة (أو تسحبه إليها).
    المستويات: ١) نصف صغير ولونان مع وميض الخانة التالية  ٢) أكبر بلا وميض  ٣) ثلاثة ألوان
               ٤) محور أفقي  ٥) أكبر مع أشكال في الخانات.
@@ -4352,7 +4396,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 </script>
 <script>
 /* لعبة «أول صوت» — الوعي الصوتي. عالم حديقة ومكتبة. تُلعب مع أحد الوالدين.
-   يقول الوالد الكلمة بصوته، وتختار الطفلة الحرف الذي تبدأ به من ٣ بطاقات.
+   يقول الوالد الكلمة بصوته، وتختار الطفل الحرف الذي تبدأ به من ٣ بطاقات.
    مبدآن: لا تُختبر ولا تُصحَّح بأي نطق، والحروف المؤجلة (ث ذ ظ ض ق) في المستوى ٤ فقط.
    المستوى ٥: القافية — ثلاث صور تتشابه كلمتان منها في آخرهما فتختار الزوج. */
 (function () {
@@ -4561,14 +4605,14 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 </script>
 <script>
 /* لعبة «جسر الروابط» — الجملة المركّبة والفصحى. عالم حكايات وجسور. تُلعب مع أحد الوالدين.
-   يقرأ الوالد جملة تنتهي برابط (لكن / لأن / لذلك / بينما)، وتختار الطفلة من ٣ صور ما يُتمّ المعنى.
+   يقرأ الوالد جملة تنتهي برابط (لكن / لأن / لذلك / بينما)، وتختار الطفل من ٣ صور ما يُتمّ المعنى.
    عند اختيار غير مناسب: تُعرض صورتها مع استفهام لطيف، ثم تتلاشى الخيارات ما عدا الصحيحة التي تنبض. */
 (function () {
   'use strict';
   var B = (window.Bustan = window.Bustan || {});
   var UI = B.UI, h = UI.h, art = B.art, kit = B.kit;
 
-  var CONNECTORS = ['لكنْ', 'لأنّ', 'لذلك', 'بينما'];
+  var CONNECTORS = ['لكنْ', 'لأنّ', 'لذلك', 'لكنَّ'];
 
   /* عبارة عامة لكل صورة حين تكون مشتتاً (تُعرض بخط صغير للوالد) */
   var PHRASE = {
@@ -4580,26 +4624,26 @@ textarea, input { -webkit-user-select: text; user-select: text; }
   };
 
   /* بنك الجمل: [رقم الرابط، الجملة وفيها {c} موضع الرابط، صورة الإتمام، نص الإتمام، مشتت، مشتت، صور المشهد]
-     المشهد صورة أو صورتان تُظهران الموقف للطفلة (من هو؟ وما حاله؟) فتفهم المطلوب بالنظر.
+     المشهد صورة أو صورتان تُظهران الموقف للطفل (من هو؟ وما حاله؟) فتفهم المطلوب بالنظر.
      ٨ جمل لكل رابط. ترتيب السهولة: «لذلك» (ماذا يحتاج؟) ثم «لأنّ» (ما السبب؟) ثم «لكنْ» (ما المانع؟) ثم «بينما» (المقابلة). */
   var BANK = [
-    [2, 'نزل المطر على البطة، {c} فتحت…', 'umbrella', 'المظلّة', 'ball', 'crown', ['duck', 'rain']],
-    [2, 'الباب مغلق، {c} أحضرت القطة…', 'key', 'المفتاح', 'banana', 'flower', ['cat', 'door']],
-    [2, 'حلّ الظلام، {c} أضاء الدب…', 'lantern', 'الفانوس', 'apple', 'ball', ['bear', 'moon']],
+    [2, 'نزل المطر، {c} دخلت القطة إلى…', 'house', 'البيت', 'ball', 'crown', ['cat', 'rain']],
+    [2, 'حلّ الليل، {c} نام…', 'sleepbear', 'الدب', 'apple', 'ball', ['moon']],
     [2, 'جاع الأرنب، {c} أكل…', 'carrot', 'الجزرة', 'star', 'key', ['rabbit']],
+    [2, 'عطشت الزهرة، {c} سقتها…', 'rain', 'الغيمة بمطرها', 'book', 'lantern', ['flower']],
+    [2, 'أشرقت الشمس، {c} تفتّحت…', 'flower', 'الزهرة', 'box', 'rocket', ['sun']],
     [2, 'أرادت النحلة الرحيق، {c} طارت إلى…', 'flower', 'الزهرة', 'box', 'rocket', ['bee']],
-    [2, 'أراد الأرنب أن يقرأ، {c} فتح…', 'book', 'الكتاب', 'lemon', 'ball', ['rabbit']],
-    [2, 'أرادت القطة أن تلعب، {c} أحضرت…', 'ball', 'الكرة', 'moon', 'leaf', ['cat']],
-    [2, 'أراد الضفدع أن يعرف الوقت، {c} نظر إلى…', 'clock', 'الساعة', 'pumpkin', 'feather', ['frog']],
+    [2, 'عطش الجمل، {c} شرب…', 'rain', 'الماء', 'book', 'crown', ['camel']],
+    [2, 'جاع الدب، {c} أكل…', 'apple', 'التفاحة', 'key', 'clock', ['bear']],
 
-    [1, 'فتحت البطة المظلّة {c}…', 'rain', 'المطر ينزل', 'star', 'banana', ['duck', 'umbrella']],
-    [1, 'أضاء الدب الفانوس {c}…', 'moon', 'الليل حلّ', 'apple', 'ball', ['bear', 'lantern']],
     [1, 'هرب العصفور {c}…', 'cat', 'القطة اقتربت', 'lemon', 'house', ['bird']],
     [1, 'فرحت النحلة {c}…', 'flower', 'الزهرة تفتّحت', 'rocket', 'box', ['bee']],
     [1, 'شرب الجمل ماءً كثيراً {c}…', 'sun', 'الشمس حارّة', 'book', 'crown', ['camel']],
-    [1, 'لم تدخل القطة البيت {c}…', 'door', 'الباب مغلق', 'grapes', 'feather', ['cat', 'house']],
+    [1, 'بقيت القطة خارج البيت {c}…', 'door', 'الباب مغلق', 'grapes', 'feather', ['cat', 'house']],
     [1, 'ذاب الثلج {c}…', 'sun', 'الشمس أشرقت', 'key', 'balloon', ['snow']],
-    [1, 'لبس الخروف معطفه {c}…', 'snow', 'الثلج يتساقط', 'flower', 'key', ['lamb']],
+    [1, 'ارتجف الخروف {c}…', 'snow', 'الثلج يتساقط', 'flower', 'key', ['lamb']],
+    [1, 'نام الدب {c}…', 'moon', 'الليل حلّ', 'apple', 'ball', ['sleepbear']],
+    [1, 'ابتلّت البطة {c}…', 'rain', 'المطر ينزل', 'star', 'banana', ['duck']],
 
     [0, 'أراد الأرنب أن يعبر النهر، {c}…', 'brokenbridge', 'الجسر مكسور', 'sun', 'carrot', ['rabbit']],
     [0, 'أرادت البطة أن تسبح في البركة، {c}…', 'snow', 'الماء تجمّد', 'book', 'apple', ['duck']],
@@ -4607,7 +4651,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
     [0, 'أرادت القطة أن تدخل البيت، {c}…', 'door', 'الباب مغلق', 'fish', 'star', ['cat', 'house']],
     [0, 'أراد الخروف أن يقطف التفاحة، {c}…', 'tree', 'الشجرة عالية', 'key', 'balloon', ['lamb', 'apple']],
     [0, 'أرادت البطة أن تلعب في الحديقة، {c}…', 'rain', 'المطر ينزل', 'crown', 'banana', ['duck']],
-    [0, 'أراد الأرنب أن يقرأ حكايته، {c}…', 'moon', 'الظلام حلّ', 'carrot', 'ball', ['rabbit', 'book']],
+    [0, 'أراد الأرنب أن يلعب خارجاً، {c}…', 'moon', 'الظلام حلّ', 'carrot', 'ball', ['rabbit']],
     [0, 'أرادت البومة أن تنام، {c}…', 'sun', 'الشمس أشرقت', 'lemon', 'box', ['owl']],
 
     [3, 'الأرنب سريع، {c}…', 'turtle', 'السلحفاة بطيئة', 'apple', 'star', ['rabbit']],
@@ -4744,7 +4788,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 <script>
 /* لعبة «سلة الفواكه» — العدّ لغرض وقراءة الأرقام. عالم بستان وشجرة.
    نمطان:
-   • «أعطِني»: الدب يحمل بطاقة رقم، فتقطف الطفلة من الشجرة فاكهة فاكهة وتسقط في السلة،
+   • «أعطِني»: الدب يحمل بطاقة رقم، فتقطف الطفل من الشجرة فاكهة فاكهة وتسقط في السلة،
      ويظهر فوق السلة العدد الجاري (١، ٢، ٣…) حتى تبلغ الرقم المطلوب.
    • «كم؟»: في السلة فواكه مرتبة صفوفاً من خمس، فتختار رقمها من ثلاث بطاقات،
      ثم تُعدّ الفواكه أمامها واحدة واحدة.
@@ -4977,7 +5021,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 <script>
 /* لعبة «صيد الحروف» — تمييز أشكال الحروف. عالم بركة وأسماك.
    الضفدع يحمل بطاقة حرف، والأسماك تسبح ببطء وعلى كل منها حرف.
-   تلمس الطفلة السمكة التي تحمل الحرف نفسه فتقفز إلى الدلو. ثلاث سمكات تُكمل الجولة.
+   تلمس الطفل السمكة التي تحمل الحرف نفسه فتقفز إلى الدلو. ثلاث سمكات تُكمل الجولة.
    المستويات: ١) حرف واحد مختلف تماماً  ٢) حرفان مختلفان  ٣) حروف متشابهة الشكل (ب ت ث…)
               ٤) أسماك أكثر وأسرع قليلاً  ٥) أشكال الحرف في أول الكلمة (بـ تـ جـ) والبطاقة بالحرف المفرد.
    لا تُختبر بالنطق: المطلوب مطابقة الشكل فقط. */
@@ -5222,7 +5266,7 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 </script>
 <script>
 /* لعبة «بطاقات الذاكرة» — الذاكرة البصرية. عالم حديقة ليلية وبطاقات لامعة.
-   تُعرض البطاقات مكشوفة لحظة (تنبؤ قبل الفعل) ثم تُقلب، فتقلبها الطفلة اثنتين اثنتين لتجد الأزواج.
+   تُعرض البطاقات مكشوفة لحظة (تنبؤ قبل الفعل) ثم تُقلب، فتقلبها الطفل اثنتين اثنتين لتجد الأزواج.
    الزوجان غير المتطابقين يعودان بهدوء (ليس خطأ في الذاكرة)، والزوج المتطابق يبقى مكشوفاً ويلمع.
    المستويات: ١) زوجان  ٢) ثلاثة  ٣) أربعة  ٤) ستة  ٥) ثمانية. ويقصر زمن المعاينة مع المستوى.
    الأخطاء (للتكيّف الصامت) = المحاولات الزائدة عن عدد الأزواج.
