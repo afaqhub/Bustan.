@@ -1230,6 +1230,44 @@ html.night::after { content: ''; position: fixed; inset: 0; z-index: 900; pointe
 .tabbar { gap: 4px; padding-inline: 6px; } .tab-btn { min-width: 72px; } .parent-btn.in-tabbar { flex: 0 0 54px; } .parent-btn .pb-tx { font-size: 12px; }
 @media (orientation: landscape) { .tab-btn { min-width: 0; } .parent-btn .pb-tx { font-size: 16px; } }
 
+/* ═════════ بستان غني + حاويات زجاجية (7.2) ═════════ */
+.home { background: linear-gradient(180deg, #74C7F4 0%, #AFE0FF 34%, #DFF3FF 58%, #F2FADD 100%); }
+.home-hills.far { height: 40%; } .home-hills.mid { height: 30%; z-index: 1; } .home-hills.fore { height: 14%; z-index: 2; transform-origin: 50% 100%; animation: foreSway 7s ease-in-out infinite; }
+@keyframes foreSway { 0%, 100% { transform: skewX(0deg); } 50% { transform: skewX(.7deg); } }
+.home-cloud.c4 { top: 36%; width: clamp(70px, 12vmin, 120px); animation-duration: 130s; animation-delay: -60s; opacity: .7; }
+.home-bird.b2 { top: 30%; width: clamp(20px, 3.6vmin, 32px); animation-duration: 36s; animation-delay: -14s; }
+.sc-windmill { position: absolute; right: 7%; bottom: 33%; width: clamp(56px, 12vmin, 104px); z-index: 0; opacity: .95; }
+.sc-house { position: absolute; left: 4%; bottom: 20%; width: clamp(52px, 11vmin, 92px); z-index: 1; }
+.sc-bunny { position: absolute; right: 14%; bottom: 9%; width: clamp(36px, 7.5vmin, 62px); z-index: 1; animation: bunnyPeek 26s ease-in-out infinite; }
+@keyframes bunnyPeek { 0%, 68% { transform: translateY(46px); opacity: 0; } 72%, 86% { transform: translateY(0); opacity: 1; } 92%, 100% { transform: translateY(46px); opacity: 0; } }
+.sc-fly { position: absolute; left: 0; top: 0; width: clamp(26px, 5.2vmin, 46px); z-index: 3; will-change: transform; }
+.sc-fly svg { width: 100%; height: auto; overflow: visible; animation: wingFlap .32s ease-in-out infinite alternate; transform-origin: 50% 60%; }
+@keyframes wingFlap { from { transform: scaleX(.78); } to { transform: scaleX(1); } }
+.sc-fly.bf1 { animation: flyA 42s linear infinite; } .sc-fly.bf2 { width: clamp(20px, 4vmin, 36px); animation: flyB 52s linear infinite; animation-delay: -20s; } .sc-fly.bee { width: clamp(22px, 4.2vmin, 38px); animation: flyC 34s linear infinite; animation-delay: -9s; }
+@keyframes flyA { 0% { transform: translate(-12vw, 62vh); } 25% { transform: translate(28vw, 48vh); } 50% { transform: translate(55vw, 66vh); } 75% { transform: translate(82vw, 50vh); } 100% { transform: translate(112vw, 58vh); } }
+@keyframes flyB { 0% { transform: translate(112vw, 40vh); } 30% { transform: translate(70vw, 55vh); } 60% { transform: translate(36vw, 42vh); } 100% { transform: translate(-12vw, 60vh); } }
+@keyframes flyC { 0% { transform: translate(-10vw, 74vh); } 20% { transform: translate(20vw, 70vh); } 22% { transform: translate(22vw, 72vh); } 45% { transform: translate(52vw, 68vh); } 47% { transform: translate(50vw, 70vh); } 75% { transform: translate(86vw, 72vh); } 100% { transform: translate(112vw, 70vh); } }
+@media (prefers-reduced-motion: reduce) { .sc-fly, .sc-bunny, .home-hills.fore { animation: none !important; } .sc-fly svg { animation: none !important; } .sc-bunny { opacity: 1; transform: none; } }
+
+/* حاويات: لوحة زجاجية خفيفة لكل مجموعة، بشريط عنوان ملوّن بارز */
+.zones .zone { background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; backdrop-filter: none !important; }
+.zones .zone-head { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px !important; padding: 3px 18px 3px 5px; border-radius: 999px; background: linear-gradient(160deg, var(--z1), var(--z2)); box-shadow: 0 5px 0 var(--zd), 0 9px 14px rgba(31, 42, 90, .2); }
+.zones .zone-badge { width: 44px !important; height: 38px !important; border-radius: 16px !important; } .zones .zone-name { font-size: 24px !important; }
+.zones .groups { gap: 20px; }
+.zones .group, .zones .zone-together > .tiles, .zones .zone-create > .tiles {
+  position: relative; background: linear-gradient(160deg, rgba(255, 255, 255, .46), rgba(255, 255, 255, .24)); backdrop-filter: blur(2.5px) saturate(1.3); -webkit-backdrop-filter: blur(2.5px) saturate(1.3);
+  border: 2px solid rgba(255, 255, 255, .85); border-radius: 28px; padding: 22px 10px 14px; box-shadow: 0 8px 22px rgba(31, 42, 90, .14), inset 0 1px 0 rgba(255, 255, 255, .95); }
+.zones .zone-together > .tiles { --ga: #FF7FA6; --gd: #D14E78; margin-top: 4px; } .zones .zone-create > .tiles { --ga: #A07CF5; --gd: #6B3CC9; margin-top: 4px; }
+.g-watch { --ga: #8E5CF0; --gd: #6B3CC9; } .g-num { --ga: #FF8A3D; --gd: #C9611F; } .g-move { --ga: #2DBE7E; --gd: #1C8F5C; } .g-know { --ga: #3D8BFD; --gd: #2468D1; }
+.zones .group-label { position: absolute; top: -13px; inset-inline-start: 14px; margin: 0; padding: 3px 16px; font-size: 15px; background: var(--ga); color: #fff; box-shadow: 0 3px 0 var(--gd); text-shadow: 0 1px 0 rgba(0, 0, 0, .2); z-index: 1; }
+.zones .tile-art { box-shadow: 0 6px 0 var(--gd, #9FB3E0), 0 12px 16px rgba(31, 42, 90, .18) !important; }
+.zones .tile.pressed .tile-art, .zones .tile:active .tile-art { transform: translateY(5px); box-shadow: 0 1px 0 var(--gd, #9FB3E0) !important; }
+.zones .tile-name { color: var(--night) !important; text-shadow: 0 1px 0 rgba(255, 255, 255, .85) !important; }
+.tabbar { background: rgba(255, 255, 255, .72); backdrop-filter: blur(8px) saturate(1.2); -webkit-backdrop-filter: blur(8px) saturate(1.2); }
+html.night .zones .group, html.night .zones .zone-together > .tiles, html.night .zones .zone-create > .tiles { background: linear-gradient(160deg, rgba(30, 36, 90, .62), rgba(30, 36, 90, .4)); border-color: rgba(255, 255, 255, .22); }
+html.night .zones .tile-name { color: #fff !important; text-shadow: 0 1px 0 rgba(0, 0, 0, .5) !important; }
+html.night .tabbar { background: rgba(30, 36, 90, .75); } html.night .tab-btn { color: #cfd6ff; }
+
 </style>
 </head>
 <body>
@@ -1732,31 +1770,68 @@ html.night::after { content: ''; position: fixed; inset: 0; z-index: 900; pointe
   /* كل الأصوات مؤثرات غير موسيقية: نقرات وفرقعات ونفخات وضجيج مرشَّح.
      لا نغمات متتابعة ولا سلّم ولا لحن، وكل صوت ثابت لا تتغير طبقته مع التكرار
      (بطلب صاحب المشروع: الابتعاد عن أي شبه بالموسيقى). */
-  function click(c, t, f, vol) { tone(c, f, t, 0.035, vol || 0.06, 'square', f * 0.7); }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function jit(f) { return f * rnd(0.9, 1.12); }      // تغيير طفيف في الطبقة كل مرة (لا تسلسل ولا لحن)
+  function click(c, t, f, vol) { tone(c, jit(f), t, 0.035, vol || 0.06, 'square', f * 0.7); }
+  /* تصفيق: ضربات ضجيج قصيرة متراكبة، تتصاعد ثم تخفت */
+  function applause(c, t, dur, density, vol) {
+    var n = Math.round(dur * density);
+    for (var i = 0; i < n; i++) {
+      var x = i / n, swell = Math.sin(Math.PI * Math.min(1, x * 1.15)); // مغلاف: يشتد في الوسط
+      var at = t + x * dur + rnd(0, 0.03);
+      noise(c, at, rnd(0.025, 0.06), vol * (0.4 + 0.8 * swell) * rnd(0.6, 1.1), rnd(1400, 3600), rnd(900, 2200), rnd(0.8, 1.6));
+    }
+  }
+  /* ثلاث صفقات منتظمة */
+  function claps(c, t, n, gap, vol) {
+    for (var i = 0; i < n; i++) { noise(c, t + i * gap, 0.07, vol, rnd(1800, 2600), 1400, 1.1); noise(c, t + i * gap + 0.012, 0.05, vol * 0.7, rnd(2800, 3600), 2000, 1.4); }
+  }
+  /* كل اسم يمكن أن يكون دالة أو مصفوفة بدائل؛ يُختار بديل مختلف عن الأخير عشوائياً */
   var SOUNDS = {
-    tap: function (c, t) { click(c, t, 900, 0.035); },                                  // لمسة زر: نقرة
-    whoosh: function (c, t) { noise(c, t, 0.45, 0.04, 500, 2400, 0.8); },               // انتقال: همسة هواء
-    card: function (c, t) { noise(c, t, 0.12, 0.05, 2500, 1200, 1.2); },                // ظهور بطاقة: «فشّ» ورق
-    pop: function (c, t) { tone(c, 300, t, 0.07, 0.08, 'sine', 700); },                 // فرقعة فقاعة
-    sparkle: function (c, t) { noise(c, t, 0.25, 0.035, 7000, 9000, 2); },              // لمعة: حفيف ناعم
-    chug: function (c, t, a) { noise(c, t, 0.12, 0.035 * (a == null ? 1 : a), 700, 300, 0.9); }, // تشو تشو: نفخة بخار
-    brake: function (c, t) { noise(c, t, 0.9, 0.045, 2600, 500, 0.7); },                // فرامل: هسهسة
-    toot: function (c, t) { noise(c, t, 0.5, 0.05, 1200, 900, 3); },                    // نفخة بخار طويلة (بلا صافرة)
-    right: function (c, t) { tone(c, 260, t, 0.08, 0.09, 'sine', 620); noise(c, t + 0.02, 0.15, 0.03, 6000, 8000, 2); }, // صواب: «بوب» مع لمعة
-    wrong: function (c, t) { tone(c, 480, t, 0.09, 0.06, 'square'); tone(c, 480, t + 0.14, 0.09, 0.06, 'square'); }, // خطأ: «بيب بيب» كتنبيه الأجهزة
-    place: function (c, t) { click(c, t, 420, 0.08); noise(c, t, 0.05, 0.04, 1500, 800, 1); }, // «طق» مغناطيس
-    pick: function (c, t) { click(c, t, 700, 0.045); },                                 // اختيار: نقرة خفيفة
-    flutter: function (c, t) { for (var i = 0; i < 6; i++) noise(c, t + i * 0.09, 0.06, 0.035, 3000, 1500, 1.5); }, // رفرفة
-    lantern: function (c, t) { tone(c, 300, t, 0.07, 0.07, 'sine', 700); },             // عدّ/إضاءة: الفرقعة نفسها كل مرة
-    splash: function (c, t) { noise(c, t, 0.35, 0.07, 1800, 500, 0.8); },               // رشّة ماء
-    sweep: function (c, t) { noise(c, t, 0.5, 0.05, 3000, 600, 0.6); },                 // كنس
-    chime: function (c, t) { tone(c, 300, t, 0.07, 0.07, 'sine', 700); },               // مصباح: فرقعة ثابتة
-    soft: function (c, t) { noise(c, t, 0.12, 0.03, 900, 600, 1); },                    // رجوع بطاقة
-    cheer: function (c, t) {                                                             // فوز: تصفيق (ضجيج متقطع)
-      for (var i = 0; i < 9; i++) noise(c, t + i * 0.07 + Math.random() * 0.03, 0.05, 0.05, 2200, 1800, 1);
-    },
-    lullaby: function (c, t) { noise(c, t, 1.4, 0.03, 600, 300, 0.6); }                 // ختام: نفَس هادئ طويل
+    tap: [function (c, t) { click(c, t, 900, 0.035); }, function (c, t) { click(c, t, 760, 0.035); noise(c, t, 0.02, 0.015, 3000, 2500, 1); }],
+    whoosh: [function (c, t) { noise(c, t, 0.45, 0.04, 500, 2400, 0.8); }, function (c, t) { noise(c, t, 0.4, 0.04, 2600, 600, 0.8); }, function (c, t) { noise(c, t, 0.5, 0.035, 900, 1800, 0.5); }],
+    card: [function (c, t) { noise(c, t, 0.12, 0.05, 2500, 1200, 1.2); }, function (c, t) { noise(c, t, 0.1, 0.05, 3200, 1800, 1.4); }, function (c, t) { noise(c, t, 0.14, 0.045, 1800, 900, 1); }],
+    pop: [function (c, t) { tone(c, jit(300), t, 0.07, 0.08, 'sine', 700); }, function (c, t) { tone(c, jit(420), t, 0.06, 0.08, 'sine', 900); noise(c, t, 0.03, 0.02, 4000, 3000, 1); }, function (c, t) { tone(c, jit(240), t, 0.09, 0.08, 'sine', 520); }],
+    sparkle: [function (c, t) { noise(c, t, 0.25, 0.035, 7000, 9000, 2); }, function (c, t) { for (var i = 0; i < 4; i++) noise(c, t + i * 0.05, 0.05, 0.03, rnd(6000, 9000), 8000, 2.5); }],
+    chug: function (c, t, a) { noise(c, t, 0.12, 0.035 * (a == null ? 1 : a), 700, 300, 0.9); },
+    brake: function (c, t) { noise(c, t, 0.9, 0.045, 2600, 500, 0.7); },
+    toot: function (c, t) { noise(c, t, 0.5, 0.05, 1200, 900, 3); },
+    /* صواب: أصوات قصيرة مختلفة */
+    right: [
+      function (c, t) { tone(c, jit(260), t, 0.08, 0.09, 'sine', 620); noise(c, t + 0.02, 0.15, 0.03, 6000, 8000, 2); },     // بوب مع لمعة
+      function (c, t) { click(c, t, 520, 0.09); click(c, t + 0.07, 640, 0.07); },                                           // طقّتان خشبيتان
+      function (c, t) { tone(c, jit(200), t, 0.14, 0.09, 'sine', 160); tone(c, jit(200), t + 0.14, 0.12, 0.08, 'sine', 380); }, // «بوينغ» زنبركي
+      function (c, t) { noise(c, t, 0.18, 0.05, 1200, 5000, 0.9); tone(c, jit(340), t + 0.1, 0.06, 0.07, 'sine', 800); },       // زِب + فقاعة
+      function (c, t) { for (var i = 0; i < 3; i++) tone(c, jit(700), t + i * 0.05, 0.04, 0.05, 'triangle', 1100); }            // زخّات ناعمة
+    ],
+    wrong: function (c, t) { tone(c, 480, t, 0.09, 0.06, 'square'); tone(c, 480, t + 0.14, 0.09, 0.06, 'square'); },
+    place: [function (c, t) { click(c, t, 420, 0.08); noise(c, t, 0.05, 0.04, 1500, 800, 1); }, function (c, t) { click(c, t, 330, 0.08); noise(c, t, 0.04, 0.05, 1100, 700, 1); }, function (c, t) { noise(c, t, 0.06, 0.06, 900, 500, 1.2); click(c, t, 260, 0.06); }],
+    pick: [function (c, t) { click(c, t, 700, 0.045); }, function (c, t) { click(c, t, 840, 0.04); }, function (c, t) { noise(c, t, 0.03, 0.03, 2500, 2000, 1.5); click(c, t, 600, 0.035); }],
+    flutter: function (c, t) { for (var i = 0; i < 6; i++) noise(c, t + i * 0.09, 0.06, 0.035, 3000, 1500, 1.5); },
+    lantern: [function (c, t) { tone(c, jit(300), t, 0.07, 0.07, 'sine', 700); }, function (c, t) { tone(c, jit(360), t, 0.06, 0.07, 'sine', 820); }],
+    splash: [function (c, t) { noise(c, t, 0.35, 0.07, 1800, 500, 0.8); }, function (c, t) { noise(c, t, 0.3, 0.07, 2400, 700, 0.7); noise(c, t + 0.12, 0.2, 0.04, 1500, 500, 0.9); }],
+    sweep: [function (c, t) { noise(c, t, 0.5, 0.05, 3000, 600, 0.6); }, function (c, t) { noise(c, t, 0.45, 0.05, 700, 2800, 0.6); }],
+    chime: [function (c, t) { tone(c, jit(300), t, 0.07, 0.07, 'sine', 700); }, function (c, t) { tone(c, jit(380), t, 0.06, 0.07, 'sine', 860); }],
+    soft: function (c, t) { noise(c, t, 0.12, 0.03, 900, 600, 1); },
+    /* فوز: تصفيق بأشكال مختلفة */
+    cheer: [
+      function (c, t) { applause(c, t, 1.7, 38, 0.05); },                                                       // تصفيق جمهور كثيف
+      function (c, t) { claps(c, t, 4, 0.16, 0.06); applause(c, t + 0.7, 1.1, 24, 0.045); },                    // صفقات منتظمة ثم تصفيق
+      function (c, t) { noise(c, t, 0.35, 0.05, 600, 3500, 0.8); applause(c, t + 0.25, 1.4, 30, 0.05); },        // همسة ثم تصفيق
+      function (c, t) { claps(c, t, 3, 0.22, 0.07); noise(c, t + 0.8, 0.5, 0.03, 7000, 9000, 2); },             // ثلاث صفقات ولمعة
+      function (c, t) { for (var i = 0; i < 6; i++) { tone(c, jit(260), t + i * 0.09, 0.05, 0.06, 'sine', 700); } applause(c, t + 0.1, 1.2, 28, 0.04); } // فرقعات احتفال + تصفيق
+    ],
+    lullaby: [function (c, t) { noise(c, t, 1.4, 0.03, 600, 300, 0.6); }, function (c, t) { noise(c, t, 1.6, 0.028, 500, 250, 0.5); }]
   };
+  var lastVar = {};
+  function pickVariant(name) {
+    var v = SOUNDS[name];
+    if (!Array.isArray(v)) return v;
+    var i = Math.floor(Math.random() * v.length);
+    if (v.length > 1 && i === lastVar[name]) i = (i + 1 + Math.floor(Math.random() * (v.length - 1))) % v.length;
+    lastVar[name] = i;
+    return v[i];
+  }
 
   /* iOS يُسكت WebAudio حين يكون مفتاح الكتم الجانبي مفعّلاً، إلا إذا كانت الصفحة
      تشغّل عنصر صوت. نشغّل مقطعاً صامتاً (٠ شدة) متكرراً داخل اللمسة الأولى فتنتقل جلسة الصوت إلى «تشغيل». */
@@ -1787,7 +1862,7 @@ html.night::after { content: ''; position: fixed; inset: 0; z-index: 900; pointe
       if (!enabled()) return;
       var c = ensure();
       if (!c) return;
-      var fn = SOUNDS[name];
+      var fn = pickVariant(name);
       if (!fn) return;
       function go() { try { fn(c, c.currentTime + 0.005, arg); } catch (e) {} }
       if (c.state === 'running') { go(); return; }
@@ -2308,6 +2383,19 @@ html.night::after { content: ''; position: fixed; inset: 0; z-index: 900; pointe
       s += tree(w * 0.1, at(0.1), 1.1, '#2FA886') + tree(w * 0.17, at(0.17), 0.8, '#3DB993') +
         tree(w * 0.5, at(0.5), 1.25, '#2FA886') + bush(w * 0.68, at(0.68), 1.2, '#3DB993') +
         tree(w * 0.86, at(0.86), 0.95, '#2FA886') + bush(w * 0.33, at(0.33), 1, '#3DB993');
+    } else if (kind === 'gfar') {   // تلال بعيدة خضراء فاتحة بأشجار صغيرة
+      fn = hillFn(w, h * 0.78, [{ a: h * 0.42, k: 2, p: 0.6 }, { a: h * 0.12, k: 5, p: 2.0 }]);
+      s = '<path d="' + hillPath(w, h, fn) + '" fill="#BFEFB4"/>';
+      var af = function (f) { return fn(w * f) + 3; };
+      s += tree(w * 0.2, af(0.2), 0.55, '#9ADB93') + tree(w * 0.26, af(0.26), 0.45, '#8AD18A') + tree(w * 0.72, af(0.72), 0.6, '#9ADB93') + bush(w * 0.5, af(0.5), 0.7, '#8AD18A');
+    } else if (kind === 'gmid') {   // تلال أمامية بأشجار متنوعة وزهور
+      fn = hillFn(w, h * 0.9, [{ a: h * 0.4, k: 3, p: 1.7 }, { a: h * 0.1, k: 7, p: 0.4 }]);
+      s = '<path d="' + hillPath(w, h, fn) + '" fill="#79D679"/>';
+      var am = function (f) { return fn(w * f) + 4; };
+      s += tree(w * 0.07, am(0.07), 1.2, '#3FAE5E') + tree(w * 0.15, am(0.15), 0.85, '#5CC56E') + tree(w * 0.38, am(0.38), 0.9, '#F7A3C0') +
+        bush(w * 0.55, am(0.55), 1.1, '#3FAE5E') + tree(w * 0.64, am(0.64), 1.05, '#5CC56E') + tree(w * 0.93, am(0.93), 1.3, '#3FAE5E') + bush(w * 0.8, am(0.8), 0.9, '#58C46A');
+      var fc = ['#FFD34E', '#F2658E', '#FFFFFF', '#B79BFF', '#FF8A3D'];
+      for (var q = 0; q < 16; q++) { var fx = (0.03 + q * 0.061 + (q % 3) * 0.01); s += flower(w * fx, fn(w * fx) + 14 + (q % 3) * 7, fc[q % 5]); }
     } else if (kind === 'clouds') {
       var c = '<g transform="translate(%X %Y) scale(%S)">' + cloud().replace(/<svg[^>]*>|<\/svg>/g, '') + '</g>';
       s = c.replace('%X', w * 0.05).replace('%Y', h * 0.15).replace('%S', 0.9) +
@@ -3395,7 +3483,7 @@ html.night::after { content: ''; position: fixed; inset: 0; z-index: 900; pointe
       ),
       zoneId === 'solo'
         ? h('div', { class: 'groups' }, ['watch', 'num', 'move', 'know'].map(function (cat) {
-            return h('div', { class: 'group' },
+            return h('div', { class: 'group g-' + cat },
               h('div', { class: 'group-label', text: S.cats[cat] }),
               h('div', { class: 'tiles' }, items.filter(function (c) { return c.cat === cat; }).map(function (it) { return tile(it, locked); })));
           }))
@@ -3534,11 +3622,20 @@ html.night::after { content: ''; position: fixed; inset: 0; z-index: 900; pointe
       h('div', { class: 'home-cloud c1', html: art.cloud() }),
       h('div', { class: 'home-cloud c2', html: art.cloud() }),
       h('div', { class: 'home-cloud c3', html: art.cloud() }),
+      h('div', { class: 'home-cloud c4', html: art.cloud() }),
       h('div', { class: 'home-balloon hb1', html: art.balloon('#F2658E', '#FFD34E') }),
       h('div', { class: 'home-balloon hb2', html: art.balloon('#8E5CF0', '#5CC8FF') }),
       h('div', { class: 'home-bird', html: art.bird('#FF8A3D') }),
-      h('div', { class: 'home-hills far', html: art.sceneTile('far', vp.W, Math.round(vp.H * 0.38)) }),
-      h('div', { class: 'home-hills mid', html: art.sceneTile('mid', vp.W, Math.round(vp.H * 0.3)) })
+      h('div', { class: 'home-bird b2', html: art.bird('#8E5CF0') }),
+      h('div', { class: 'home-hills far', html: art.sceneTile('gfar', vp.W, Math.round(vp.H * 0.4)) }),
+      h('div', { class: 'sc-windmill', html: B.pics.draw('windmill') }),
+      h('div', { class: 'home-hills mid', html: art.sceneTile('gmid', vp.W, Math.round(vp.H * 0.3)) }),
+      h('div', { class: 'sc-house', html: B.pics.draw('house') }),
+      h('div', { class: 'sc-bunny', html: B.pics.draw('rabbit') }),
+      h('div', { class: 'home-hills fore', html: art.sceneTile('fore', vp.W, Math.round(vp.H * 0.14)) }),
+      h('div', { class: 'sc-fly bf1', html: B.pics.draw('butterfly') }),
+      h('div', { class: 'sc-fly bf2', html: B.pics.draw('butterfly') }),
+      h('div', { class: 'sc-fly bee', html: B.pics.draw('bee') })
     );
 
     var chips = chipsRow(locked);
